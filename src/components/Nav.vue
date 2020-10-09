@@ -1,33 +1,39 @@
 <template>
-    <nav>
+    <div id="nav">
 
         <!-- 回到顶部 必须写在首位-->
-        <el-backtop>
-            <i class="fa fa-arrow-up" :class="sunny?'backtopOne':'backtopTwo'"></i>
-        </el-backtop>
+        <el-backtop><i class="fa fa-arrow-up" :class="flag?'backtopBlack':
+        'backtopWhite'"></i></el-backtop>
 
         <!-- 左侧栏 -->
-        <aside :class="sunny?'switchColor enterAside':''">
+        <aside :class="flag?'switchColor enterAside':''">
+            <!-- logo图标 -->
             <div class="logo">
-                <img src="https://s1.ax1x.com/2020/09/04/wkjLL9.png" @click="$router.go(0)">
+                <img src="https://s1.ax1x.com/2020/09/04/wkjLL9.png">
                 <transition name="logo">
                     <span v-show="!isCollapse">Simon</span>
                 </transition>
             </div>
-            <el-menu :class="sunny?'one switchColor':'one'" :collapse="isCollapse" :unique-opened="true">
+            <!-- 折叠栏一 -->
+            <el-menu :class="flag?'one switchColor':'one'" :collapse="isCollapse" :unique-opened="true">
                 <el-submenu v-for="item in asideData1" :key="item.id" :index="item.id">
                     <template slot="title">
-                        <i :class="item.className" :style="{'margin':item.id == 5 || item.id == 6 ? '0 10px 0 5px': ''}"></i>
-                        <span slot="title" :style="{'color':sunny?'#fff':'#000'}">{{item.title}}</span>
+                        <i :class="item.className" :style="{'margin':item.id == 5 
+                            || item.id == 6 ? '0 10px 0 5px': ''}"></i>
+                        <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{item.title}}</span>
                     </template>
-                    <el-menu-item-group :class="sunny?'switchColor enterAside':''">
+                    <el-menu-item-group :class="flag?'switchColor enterAside':''">
                         <span slot="title">{{item.title}}</span>
-                        <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" @click="location(item.id,i.id,i.flag)" :style="{'color':sunny?'#fff':'#000'}">{{i.title}}</el-menu-item>
+                        <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
+                            @click="location(item.id,i.id,i.flag)" :style="{'color':flag?'#fff':'#000'}">
+                        {{i.title}}</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
-            <el-menu :class="sunny?'two switchColor':'two'" :collapse="isCollapse">
-                <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" :style="{'color':sunny?'#fff':'#000'}">
+            <!-- 折叠栏二 -->
+            <el-menu :class="flag?'two switchColor':'two'" :collapse="isCollapse">
+                <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" 
+                    :style="{'color':flag?'#fff':'#000'}">
                     <i :class="item.className"></i>
                     <span slot="title">{{item.title}}</span>
                 </el-menu-item>
@@ -35,70 +41,67 @@
         </aside>
 
         <!-- 右边内容区域 -->
-
-        <main :style="{'padding-left':isCollapse ?'64px':'200px'}">
-
+        <section :style="{'padding-left':isCollapse ?'64px':'200px'}">
             <!-- 顶部导航 -->
-            <header :class="sunny?'black':'white'">
+            <header :class="flag?'black':'white'">
                 <div>
+                    <img src="https://s1.ax1x.com/2020/09/04/wkjLL9.png">
                     <i class="el-icon-s-unfold" @click="showCollapse" v-show="show"></i>
                     <i class="el-icon-s-fold" @click="hideCollapse" v-show="hide"></i>
-                    <ul>
-                        <li v-for="item in navList" :key="item.id">
-                            <router-link :to="item.path" :style="{'color':sunny?'#fff':'#000'}">
-                                <i :class="item.className"></i>{{item.title}}
-                            </router-link>
-                        </li>
-                    </ul>
-                    <i class="fa fa-search" :style="{right:isCollapse ?'50px':'200px'}"></i>
+                    <nav>
+                        <li><router-link to="/link"><i class="el-icon-s-home"></i>
+                            首页</router-link></li>
+                        <li><a href="http://www.linncode.cn" target="_blank">
+                        <i class="el-icon-user"></i>西蒙首页</a></li>
+                        <li><a href="http://www.linncode.cn:9547" target="_blank">
+                        <i class="el-icon-notebook-1"></i>个人博客</a></li>
+                    </nav>
                 </div>
             </header>
 
             <!-- 中间链接内容-->
-            <main>
-                <router-view ref="Link" :sunny="sunny"></router-view>
-            </main>
+            <main><router-view ref="Link" :flag="flag"></router-view></main>
 
-        </main>
+        </section>
 
-        <!-- 右下角切换颜色等功能 -->
-        <div class="Weather">
-            <div class="poisition">
-                <div class="weather">
-                    <i :class="sunny?'el-icon-heavy-rain backtopOne':'el-icon-heavy-rain backtopTwo'" @mouseenter="showWeatherCard" @mouseleave="hideWeatherCard"></i>
-                    <div v-show="showWeather" @mouseenter="showWeatherCard" @mouseleave="hideWeatherCard">
-                        <header>
-                            <label>{{city}}</label>
-                            <span>简约天气</span>
-                        </header>
-                        <main>
-                            <span>{{wendu}}</span>
-                            <span>{{type}}</span>
-                        </main>
-                        <footer>
-                            <table>
-                                <tr v-for="(item,index) in weatherList" :key="index">
-                                    <td align="center">{{item.date}}</td>
-                                    <td align="center">{{item.type}}</td>
-                                    <td align="center">{{item.wendu}}</td>
-                                    <td align="center">{{item.fengxiang}}</td>
-                                </tr>
-                            </table>
-                        </footer>
-                    </div>
+        <!-- 右下角 -->
+        <div class="weatherBox">
+            <!-- 天气盒子 -->
+            <div class="weather">
+                <!-- <i :class="flag?'el-icon-heavy-rain backtopBlack':'el-icon-heavy-rain backtopWhite'"  -->
+                <i :class="className" 
+                    @mouseenter="showWeather = true" @mouseleave="showWeather = false"></i>
+                <div v-show="showWeather" @mouseenter="showWeather = true" 
+                    @mouseleave="showWeather = false">
+                    <header><label>{{city}}</label><span>简约天气</span></header>
+                    <main><span>{{wendu}}</span><span>{{type}}</span>
+                    </main>
+                    <footer>
+                        <table>
+                            <tr v-for="(item,index) in weatherList" :key="index">
+                                <td align="center">{{item.date}}</td>
+                                <td align="center">{{item.type}}</td>
+                                <td align="center">{{item.wendu}}</td>
+                                <td align="center">{{item.fengxiang}}</td>
+                            </tr>
+                        </table>
+                    </footer>
                 </div>
-                <div class="toggleMode">
-                    <el-tooltip effect="dark" content="日间模式" placement="left">
-                        <i :class="sunny?'el-icon-sunny backtopOne':'el-icon-sunny backtopTwo'" v-show="sunny" @click="switchMoon"></i>
-                    </el-tooltip>
-                    <el-tooltip effect="dark" content="夜间模式" placement="left">
-                        <i :class="sunny?' el-icon-moon backtopOne':'el-icon-moon backtopTwo'" v-show="moon" @click="switchSunny"></i>
-                    </el-tooltip>
-                </div>
+            </div>
+            <!-- 切换主题 -->
+            <div class="toggleMode">
+                <el-tooltip effect="dark" content="日间模式" placement="left">
+                    <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
+                    v-show="sunny" @click="switchMoon"></i>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="夜间模式" placement="left">
+                    <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
+                    v-show="moon" @click="switchSunny"></i>
+                </el-tooltip>
             </div>
         </div>
 
-    </nav>
+    </div>
 </template>
 
 <script>
@@ -207,16 +210,8 @@ export default {
                 },
             ],
             asideData2:[//左侧导航数据2
-                {id:0,className:'el-icon-notebook-1',title:'博客文章'},
-                {id:1,className:'el-icon-edit-outline',title:'留言板'},
-                {id:2,className:'el-icon-user',title:'个人中心'},
-                {id:3,className:'el-icon-warning-outline',title:'关于本站'}
-            ],
-            navList:[//顶部导航数据
-                {id:0,path:'/nav',className:'fa fa-home',title:'主页'},
-                {id:1,path:'/blog',className:'el-icon-notebook-1',title:'博客'},
-                {id:2,path:'/message',className:'el-icon-edit-outline',title:'留言板'},
-                {id:3,path:'/index',className:'el-icon-user',title:'个人中心'}
+                {id:0,className:'el-icon-notebook-1',title:'个人博客'},
+                {id:1,className:'el-icon-user',title:'西蒙首页'}
             ],
             city:'',//当前城市
             weatherList:[],//最近三天天气数据
@@ -227,11 +222,37 @@ export default {
             show:true,//控制展开
             sunny:false,//控制切换到日间模式
             moon:true,//控制切换到夜间模式
+            flag:false,//是否是日间模式
             showWeather:false
+        }
+    },
+    computed:{
+        className(){
+            let className = ''
+            if(!this.flag){
+                if(this.type == '晴'){
+                    className = 'el-icon-sunny ' + 'backtopWhite'
+                }else if(this.type == '多云'){
+                    className = 'el-icon-cloudy ' + 'backtopWhite'
+                }else{
+                    className = 'el-icon-heavy-rain ' + 'backtopWhite'
+                }
+            }else{
+                if(this.type == '晴'){
+                    className = 'el-icon-sunny ' + 'backtopBlack'
+                }else if(this.type == '多云'){
+                    className = 'el-icon-cloudy ' + 'backtopBlack'
+                }else{
+                    className = 'el-icon-heavy-rain ' + 'backtopBlack'
+                }
+            }
+            return className
         }
     },
     created() {
         this.getLoactionCity()//初始化前获取当前地址
+        //禁止鼠标右键点击
+        document.oncontextmenu =  () => {event.returnValue = false}
     },
     methods: {
         //展开折叠
@@ -248,9 +269,9 @@ export default {
         },
         //锚点跳转
         location(fatherIndex,sonIndex,sonFlag){
-            var ul = document.querySelectorAll('.item>div ul')[fatherIndex]
+            var ul = document.querySelectorAll('.item>div nav')[fatherIndex]
             var lis = ul.children
-            window.scroll({top: ul.offsetTop - 138,behavior: 'smooth'})
+            window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
             //调用子组件方法
             this.$refs.Link.clickNav(fatherIndex,sonIndex,sonFlag)
         },
@@ -258,11 +279,13 @@ export default {
         switchSunny(){
             this.moon = false
             this.sunny = true
+            this.flag = true
         },
         //切换到夜间模式
         switchMoon(){
             this.moon = true
             this.sunny = false
+            this.flag = false
         },
         //获取当前地址,使用jsonp解决跨域问题 (get请求)
         async getLoactionCity(){
@@ -288,77 +311,65 @@ export default {
             this.weatherList = value
             this.wendu = ((Number(value[0].high.slice(3,5)) + Number(value[0].low.slice(3,5))) / 2) + '℃'
             this.type = value[0].type
-        },
-        //展示天气盒子
-        showWeatherCard(){
-            this.showWeather = true
-        },
-        //隐藏天气盒子
-        hideWeatherCard(){
-            this.showWeather = false
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.backtopOne{
-    background-color: #363738!important;
-    color: #AAA!important;
-}
-.backtopTwo{
-    background-color: #ddd!important;
-    color: #777!important;
-}
-.el-backtop{
-    color: #777;
-    font-size: 14px;
-    bottom: 146px!important;
-    width: 40px;
-    height: 40px;
-    i{padding: 14px 15px;border-radius: 50%;}
-}
-nav{
+
+#nav{
     display: flex;
     position: relative;
     >aside{
-        .logo{
-            margin: 10px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            img{width: 50px;height: 50px;border-radius: 50%;}
-            span{margin-left: 10px;color: #1E90FF;}
-        }
         height: 100vh; 
         background-color: #f9f9f9;
         position: fixed;
-        .one:not(.el-menu--collapse) {
-            width: 200px;
-            border: 0;
-            max-height: 750px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            &::-webkit-scrollbar {width: 6px;}
-            &::-webkit-scrollbar-thumb {background-color: #BDBDBD;border-radius: 3px;}
-        }
-        .one,.two{border: 0;background-color: #f9f9f9;}
-        .two{margin-top: auto;}
-        .el-menu-item{&:hover{color: #1E90FF;}}
         display: flex;
         flex-direction: column;
     }
-    >main{
+    >section{
         width: 100vw;
         transition: all .5s;
         box-sizing: border-box;
     }
+    .weatherBox{
+        position: fixed;
+        top: 85vh;
+        right: 40px;
+        box-sizing: border-box;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 }
-.switchColor{
-    background-color: #2C2E2F!important;
+
+#nav>aside{
+    .logo{
+        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        img{width: 50px;height: 50px;border-radius: 50%;}
+        span{margin-left: 10px;color: #1E90FF;}
+    }
+    .one:not(.el-menu--collapse) {
+        width: 200px;
+        border: 0;
+        max-height: 750px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {width: 6px;}
+        &::-webkit-scrollbar-thumb {background-color: #ddd;border-radius: 3px;}
+        &::-webkit-scrollbar-track{background-color: #fff;}
+    }
+    .one,.two{border: 0;background-color: #f9f9f9;}
+    .two{margin-top: auto;}
+    .el-menu-item{&:hover{color: #1E90FF!important;}}
 }
-nav>main{
+
+#nav>section{
     header{
         width: 100%;
         height: 7.5vh;
@@ -370,61 +381,123 @@ nav>main{
             display: flex;
             align-items: center;
             position: relative;
-            width: 100%;
             >i{
                 font-size: 24px;
                 color: #888888;
-                transition: color .5s;
+                transition: color .25s;
                 &:hover{color: #1E90FF!important;}
                 margin: 0 20px 0 20px;
                 cursor: pointer;
             }
-            ul{
+            img{width: 50px;height: 50px;border-radius: 50%;display: none;}
+            nav{
                 display: flex;
                 list-style: none;
-                li{
-                    margin-right: 20px;
+                li{margin-right: 20px;
                     a{
                         color: #000;
-                        transition: color .5s;
+                        transition: color .25s;
                         cursor: pointer;
                         &:hover{color: #1E90FF!important;}
                         font-size: 14px;
-                        >i{margin-right: 2px;}
+                        i{margin-right: 2px;}
                     }
                     
                 }
-            }
-            >i:last-child{
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                transition: all .4s;
-                font-size: 22px;
             }
         }
         
     }
 }
-//伪元素背景为黑色
+
+#nav .weatherBox{
+    i{
+        padding: 12px 12px;
+        background-color: #eee;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: color .25s;
+    }
+    .toggleMode{
+        i:first-child:hover{color: #fff!important;}
+        i:last-child:hover{color: #000!important;}
+    }
+    .weather{
+        position: relative;
+        >div{
+            position: absolute;
+            top: 50px;
+            left: -1px;
+            transform: translate(-100%,-100%);
+            width: 270px;
+            height: 450px;
+            border-radius: 5px;
+            padding: 10px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgba(0,0,0, .2);
+            backdrop-filter: blur(2px);
+            background: url(https://s1.ax1x.com/2020/10/08/00iVJO.jpg) no-repeat center;
+            background-size: cover;
+            header{
+                display: flex;
+                justify-content: space-between;
+                color: #fff;
+                font-size: 14px;
+            }
+            main{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #fff;
+                padding-bottom:10px ;
+                span:first-child{font-size: 50px;}
+                span:last-child{
+                    font-size: 14px;
+                    background-color: #1e90ff;
+                    border-radius: 5px;
+                    padding: 2px 5px;
+                }
+                border-bottom: 1px solid #fff;
+            }
+            footer{
+                color: #fff;
+                td{width: 25%;}
+            }
+        }
+        i{margin: 10px 0;}
+    }
+}
+
+.backtopBlack{background-color: #363738!important;color: #AAA!important;}
+.backtopWhite{background-color: #ddd!important;color: #777!important;}
+.el-backtop{
+    color: #777;
+    font-size: 14px;
+    bottom: 146px!important;
+    width: 40px;
+    height: 40px;
+    i{padding: 14px 15px;border-radius: 50%;}
+}
+header.black{
+    a{color: #fff!important;}
+}
 .black::before{
     content: '';
-    filter: blur(px);
+    backdrop-filter: blur(5px);
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: -1;
-    background-color: rgba(25,26,33, .8);
+    background-color: rgba(0,0,0, .2);
     background-attachment: fixed;
-    margin: -3px;
-    margin-left: 0;
 }
-//伪元素背景为白色
 .white::before{
     content: '';
-    filter: blur(px);
+    backdrop-filter: blur(5px);
     position: absolute;
     top: 0;
     bottom: 0;
@@ -433,85 +506,26 @@ nav>main{
     z-index: -1;
     background-color: rgba(253,253,253, .8);
     background-attachment: fixed;
-    margin: -3px;
-    margin-left: 0;
 }
-.logo-enter,.logo-leave-to{
-    opacity: 0;
-}
-.logo-enter-active{
-    transition: all 1s;
-}
-.logo-leave-active{
-    transition: all 0.2s;
-}
+
+.switchColor{background-color: #2C2E2F!important;}
+.logo-enter,.logo-leave-to{opacity: 0;}
+.logo-enter-active{transition: all 1s;}
+.logo-leave-active{transition: all 0.2s;}
+
 @media screen and (max-width: 760px) {
-    nav>aside{
+    #nav>aside,#nav>section>header>div>i{
         display: none;
-        z-index: -1;
     }
-    nav>main{
+    #nav>section>header>div>img{
+        display: block;
+        margin-right: 20px;
+    }
+    #nav>section{
         padding-left: 0!important;
-        header div i:last-child{right: 0!important;}
     }
 }
-.Weather{
-    position: absolute;
-    top: 0;
-    right: 80px;
-    padding-top: 85vh;
-    box-sizing: border-box;
-    height: 100vh;
-    .poisition{
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-        i{padding: 12px 12px;background-color: #eee;border-radius: 50%;cursor: pointer;transition: color .5s;}
-        .toggleMode{
-            i:first-child:hover{color: #fff!important;}
-            i:last-child:hover{color: #000!important;}
-        }
-        .weather{
-            position: relative;
-            >div{
-                position: absolute;
-                top: 50px;
-                left: 0;
-                transform: translate(-100%,-100%);
-                width: 270px;
-                height: 270px;
-                border-radius: 5px;
-                padding: 10px 10px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                background: url(https://s1.ax1x.com/2020/05/19/Y5Q0OJ.jpg) no-repeat;
-                background-position: center bottom;
-                header{
-                    display: flex;
-                    justify-content: space-between;
-                    color: #fff;
-                    font-size: 14px;
-                }
-                main{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    color: #fff;
-                    padding-bottom:10px ;
-                    span:first-child{font-size: 50px;}
-                    span:last-child{font-size: 14px;background-color: #1e90ff;border-radius: 5px;padding: 2px 5px;}
-                    border-bottom: 1px solid #fff;
-                }
-                footer{
-                    color: #fff;
-                    td{width: 25%;}
-                }
-            }
-            i{margin: 10px 0;}
-        }
-    }
-}
+
 .enterAside{
     div.el-submenu__title:hover{
         span{color: #1e90ff!important;}

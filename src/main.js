@@ -1,10 +1,11 @@
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { VueJsonp } from 'vue-jsonp'
 import './assets/css/global.css'
 
-// axios.defaults.baseURL = 'http://127.0.0.1:8888/'
 axios.defaults.baseURL='http://139.196.210.43:0924/'
+// axios.defaults.baseURL='http://localhost:8888/'
 
 axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
@@ -17,7 +18,7 @@ axios.interceptors.response.use(config => {
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
-
+Vue.use(VueJsonp)
 
 //处理时间格式的过滤器
 Vue.filter('date', function (originVal) {

@@ -1,68 +1,77 @@
 <template>
-    <div class="link" :style="{'background-color':sunny?'#1B1D1F':'#f9f9f9'}">
+    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#f9f9f9'}">
 
         <!-- 搜索框部分 -->
         <header>
-
             <!-- 搜索框上面的ul -->
-            <ul id="ulOne">
-                <li v-for="item in ulOne" :key="item.id" :class="item.id == 0 ? 'currentLi':''" @click="switchUl(item.id)">{{item.title}}</li>
-            </ul>
-
+            <nav id="ulOne">
+                <li v-for="item in ulOne" :key="item.id" 
+                    :class="item.id == 0 ? 'currentLi':''" 
+                    @click="switchUl(item.id)">
+                    {{item.title}}
+                </li>
+            </nav>
             <!-- 可移动的线 -->
             <div class="line"></div>
-
             <!-- 搜索框 -->
             <div class="search">
-                <input type="text" :placeholder="value" ref="search" v-model="searchValue" @keyup="search">
-                <button @click="searchAgain"><i class="el-icon-search"></i></button>
+                <input type="text" :placeholder="value" 
+                ref="search" v-model="searchValue" @keyup.enter.native="search">
+                <button @click="search"><i class="el-icon-search"></i></button>
             </div>
-
             <!-- 搜索框下面的ul -->
-            <ul id="ulTwo" v-for="(item,index) in ulTwo" :key="index" v-show="index == currentIndex">
-                <li v-for="i in item.children" :key="i.id" :class="i.id == 0 ? 'currentLi':''" @click="switchLi(i.id,i.path)">{{i.title}}</li>
-            </ul>
-
+            <nav id="ulTwo" v-for="(item,index) in ulTwo" 
+                :key="index" v-show="index == currentIndex">
+                <li v-for="i in item.children" :key="i.id" 
+                    :class="i.id == 0 ? 'currentLi':''" 
+                    @click="switchLi(i.id,i.path)">
+                    {{i.title}}
+                </li>
+            </nav>
         </header>
 
         <!-- 内容区域 -->
         <main>
-            
             <!-- 主要内容 -->
             <section>
                 <div class="item" v-for="item in NAVData" :key="item.id">
-                    
                     <!-- 提示文字 -->
-                    <label :style="{'color':sunny?'#888':'#000'}"><i class="el-icon-price-tag"></i><span>{{item.title}}</span></label>
-
+                    <label :style="{'color':flag?'#888':'#000'}">
+                        <i class="el-icon-price-tag"></i>
+                        <span>{{item.title}}</span>
+                    </label>
                     <!-- 小导航 -->
                     <div>
-                        <ul :style="{'background-color':sunny?'#181A1C':'#E0E0E0'}">
+                        <nav :style="{'background-color':flag?'#181A1C':'#E0E0E0'}">
                             <li class="back" :style="{'width':item.navList[0].flag ? '56px' : '28px'}"></li>
-                            <li v-for="itm in item.navList" :key="itm.id" :class="itm.id == 0 ?'currentLi':''" @click="clickNav(item.id,itm.id,itm.flag)" @mouseenter="enterNav(item.id,itm.id,itm.flag)" @mouseleave="leaveNav(item.id)">{{itm.navName}}</li>
-                        </ul>
-                        <!-- <span>more+</span> -->
+                            <li v-for="itm in item.navList" :key="itm.id" :class="itm.id == 0 ?'currentLi':''" 
+                                @click="clickNav(item.id,itm.id,itm.flag)" 
+                                @mouseenter="enterNav(item.id,itm.id,itm.flag)" 
+                                @mouseleave="leaveNav(item.id)">
+                                {{itm.navName}}
+                            </li>
+                        </nav>
+                        <span :style="{'color':flag?'#fff':'#000'}">more+</span>
                     </div>
-
                     <!-- 数据 -->
-                    <ul v-for="it in item.navData" :key="it.id" v-show="it.id === indexArr[item.id].index">
-                        <li v-for="i in it.children" :key="i.id" :style="{'background-color':sunny?'#2C2E2F':'#fff'}" @mouseenter="liUp(item.id,it.id,i.id)" @mouseleave="liDown(item.id,it.id,i.id)">
+                    <nav v-for="it in item.navData" :key="it.id" v-show="it.id === indexArr[item.id].index">
+                        <li v-for="i in it.children" :key="i.id" :class="flag?'liBlack':'liWhite'" 
+                            @mouseenter="liUp(item.id,it.id,i.id)" @mouseleave="liDown(item.id,it.id,i.id)">
                             <a :href="i.path" target="_blank">
-                                <img src="https://s1.ax1x.com/2020/05/09/YMs8DP.jpg" alt="">
+                                <img src="https://s1.ax1x.com/2020/05/09/YMs8DP.jpg" alt="" v-show="false">
                                 <div>
-                                    <strong :style="{'color':sunny?'#fff':'#000'}">{{i.title}}</strong>
+                                    <strong :style="{'color':flag?'#fff':'#000'}">{{i.title}}</strong>
                                     <span>{{i.content}}</span>
                                 </div>
                             </a>
                         </li>
-                    </ul>
-
+                    </nav>
                 </div>
             </section>
-
             <!-- 底部备案 -->
-            <footer :style="{'color':sunny?'#fff':'#000'}">Copyright © 2020 西蒙导航 苏ICP备20023864号   Design by 西蒙</footer>
-
+            <footer :style="{'color':flag?'#fff':'#000'}">
+                Copyright © 2020 简约导航 苏ICP备20023864号   Design by Simon
+            </footer>
         </main>
 
          
@@ -71,7 +80,7 @@
 
 <script>
 export default {
-    props:['sunny'],
+    props:['flag'],
     data(){
         return {
             ulOne:[
@@ -130,7 +139,7 @@ export default {
             value:'百度',//初始搜索框中的内容
             searchValue:'',//输入的内容
             searchPath:'https://www.baidu.com/s?wd=',//初始搜索框的地址值
-            flag:false,//未点击有蓝色背景的导航
+            flagNav:false,//未点击有蓝色背景的导航
             blueBgIndexArr:[],//默认所有蓝色背景均在下标为1的li下面
             blueBgPositionArr:[],//默认所有蓝色背景距左的初始距离都为零
             indexArr:[],//点击小导航将其导航li的下表传给对应的对象中的index
@@ -188,32 +197,24 @@ export default {
             this.searchPath = path
             this.searchFocus()
         },
-        //回车搜索
-        search(e){
-            if(e.keyCode == 13){
-                if((this.searchValue.trim()) == '') return this.$message({type:'error',duration:1000,message:'请输入内容'})
-                window.open(this.searchPath+this.searchValue)
-                this.searchValue = ''
-            }
-        },
-        //点击图标搜索
-        searchAgain(){
+        //搜索
+        search(){
             if((this.searchValue.trim()) == '') return this.$message({type:'error',duration:1000,message:'请输入内容'})
-                window.open(this.searchPath+this.searchValue)
-                this.searchValue = ''
+            window.open(this.searchPath+this.searchValue)
+            this.searchValue = ''
         },
         //鼠标移入导航的li
         enterNav(fatherIndex,sonIndex,sonFlag){
-            var lis = document.querySelectorAll('.item>div ul')[fatherIndex].children
-            this.flag = false
+            var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
+            this.flagNav = false
             lis[0].style.left = lis[sonIndex+1].offsetLeft + 'px'
             lis[0].style.width =  (sonFlag ? '56' : '28') + 'px'
             this.removeClass(lis,sonIndex+1)
         },
         //鼠标移出导航的li
         leaveNav(fatherIndex){
-            if(!this.flag){
-                var lis = document.querySelectorAll('.item>div ul')[fatherIndex].children
+            if(!this.flagNav){
+                var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
                 lis[0].style.left = this.blueBgPositionArr[fatherIndex] + 'px'
                 lis[0].style.width =  (this.NAVData[fatherIndex].navList[this.blueBgIndexArr[fatherIndex]-1].flag ? '56' : '28') + 'px'
                 this.removeClass(lis,this.blueBgIndexArr[fatherIndex])
@@ -221,8 +222,8 @@ export default {
         },
         //鼠标点击导航的li
         clickNav(fatherIndex,sonIndex,sonFlag){
-            var lis = document.querySelectorAll('.item>div ul')[fatherIndex].children
-            this.flag = true
+            var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
+            this.flagNav = true
             this.blueBgPositionArr[fatherIndex] = lis[sonIndex+1].offsetLeft
             lis[0].style.left = lis[sonIndex+1].offsetLeft + 'px'
             lis[0].style.width =  (sonFlag ? '56' : '28') + 'px'
@@ -237,26 +238,36 @@ export default {
         },
         //鼠标移入内容区域上移
         liUp(fatherIndex,sonIndex,grandsonIndex){
-            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('ul')[sonIndex+1].children[grandsonIndex]
-            li.classList.remove('down')
-            li.classList.add('up')
+            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('nav')[sonIndex+1].children[grandsonIndex]
+            if(!this.flag){
+                li.classList.remove('downWhite')
+                li.classList.add('upWhite')
+            }else{
+                li.classList.remove('downBlack')
+                li.classList.add('upBlack')
+            }
         },
         //鼠标移出内容区域下降
         liDown(fatherIndex,sonIndex,grandsonIndex){
-            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('ul')[sonIndex+1].children[grandsonIndex]
-            li.classList.remove('up')
-            li.classList.add('down')
+            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('nav')[sonIndex+1].children[grandsonIndex]
+            if(!this.flag){
+                li.classList.remove('upWhite')
+                li.classList.add('downWhite')
+            }else{
+                li.classList.remove('upBlack')
+                li.classList.add('downBlack')
+            }
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.link{
+#link{
     width: 100%;
     min-height: 100vh;
     background-color: #F9F9F9;
-    transition: color .5s;
+    transition: color .25s;
     >header{
         height: 450px;
         background-color: rgb(7,7,27);
@@ -277,8 +288,9 @@ export default {
         }
     }
 }
-.link>header{
-    ul{
+
+#link>header{
+    nav{
         list-style: none;
         display: flex;
         li{
@@ -330,7 +342,7 @@ export default {
     }
     
 }
-.currentLi{color: #fff!important;}
+
 section{
     .item{
         margin-top: 20px;
@@ -340,14 +352,18 @@ section{
             display: flex;
             align-items: center;
             font-size: 18px;
-            i{transform: rotate(90deg);margin-right: 10px;font-size: 24px;}
             font-weight: bold;
+            i{
+                transform: rotate(90deg);
+                margin-right: 10px;
+                font-size: 24px;
+            }
         }
         >div{
             margin: 14px 0 22px 0;
             display: flex;
             justify-content: space-between;
-            ul{
+            nav{
                 list-style: none;
                 display: flex;
                 height: 30px;
@@ -379,23 +395,40 @@ section{
             }
             span{&:hover{color: #1e90ff;}cursor: pointer;font-size: 14px;}
         }
-        >ul{
+        >nav{
             display: flex;
             flex-flow: row wrap;
             list-style: none;
             li{
                 height: 70px;
                 background-color: #fff;
-                padding: 15px 15px;
                 box-sizing: border-box;
-                a{display: flex;align-items: center;justify-content: center;}
-                img{width: 40px;height: 40px;border-radius: 50%;margin-right: 10px;}
+                a{
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    padding: 15px 15px;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }
                 div{
                     width: 80%;
                     display: flex;
                     flex-direction: column;
                     font-size: 12px;
-                    strong{margin-bottom: 5px;color:#000;transition: color .5s;}
+                    strong{
+                        margin-bottom: 5px;
+                        color:#000;
+                        transition: color .25s;
+                    }
                     span{
                         color: #6C757D;
                         white-space: nowrap;
@@ -403,57 +436,90 @@ section{
                         text-overflow: ellipsis;
                     }
                 }
-                transition: all .5s;
+                transition: all .25s;
                 &:hover{strong{color: #1E90FF!important;}}
             }
         }
     }
 }
-.up{animation: up .5s forwards;} 
-.down{animation: down .5s forwards;} 
-@keyframes up {
-  0%{
+
+.currentLi{color: #fff!important;}
+.upWhite{animation: upWhite .25s linear forwards;} 
+.downWhite{animation: downWhite .25s linear forwards;} 
+.upBlack{animation: upBlack .25s linear forwards;} 
+.downBlack{animation: downBlack .25s linear forwards;} 
+.liWhite{
+    box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede!important;
+    background-color: #fff!important;
+}
+.liBlack{
+    box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2)!important;
+    background-color: #2c2e2f!important;
+}
+@keyframes upWhite {
+  from{
       transform: translateY(0);
-    //   box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
+      box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
   }
-  100%{
+  to{
       transform: translateY(-10px);
-    //   box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
+      box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
   }                  
 }
-@keyframes down {
-  0%{
+@keyframes downWhite {
+  from{
       transform: translateY(-10px);
-    //   box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
+      box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
   }
-  100%{
+  to{
       transform: translateY(0);
-    //   box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
+      box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
   }                  
 }
+@keyframes upBlack {
+  from{
+      transform: translateY(0);
+      box-shadow: 2px 2px 2px rgba(0,0,0, .2),-2px -2px 2px rgba(0,0,0, .2);
+  }
+  to{
+      transform: translateY(-10px);
+      box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2);
+  }                  
+}
+@keyframes downBlack {
+  from{
+      transform: translateY(-10px);
+      box-shadow: 2px 2px 2px  rgba(0,0,0, .2),-2px -2px 2px  rgba(0,0,0, .2);
+  }
+  to{
+      transform: translateY(0);
+      box-shadow: 6px 8px 12px  rgba(0,0,0, .2),-6px 8px 12px  rgba(0,0,0, .2);
+  }                  
+}
+
 @media screen and (min-width: 1680px) and (max-width: 1920px) {
-    section .item>ul li{
+    section .item>nav li{
         margin: 0 1.59% 30px 0;
         width: 15.34%;
         &:nth-child(6n){margin-right: 0;}
     }
 }
 @media screen and (min-width: 1200px) and (max-width: 1680px) {
-    section .item>ul li{
+    section .item>nav li{
         margin: 0 2% 30px 0;
         width: 18.4%;
         &:nth-child(5n){margin-right: 0;}
     }
 }
 @media screen and (min-width: 960px) and (max-width: 1200px) {
-    section .item>ul li{
+    section .item>nav li{
         margin: 0 2% 30px 0;
         width: 23.5%;
         &:nth-child(4n){margin-right: 0;}
     }
 }
 @media screen and (min-width: 760px) and (max-width: 960px) {
-    section .item>ul li{
+    section .item>nav li{
         margin: 0 2% 30px 0;
         width: 32%;
         &:nth-child(3n){margin-right: 0;}
@@ -463,7 +529,7 @@ section{
     }
 }
 @media screen and (max-width: 760px) {
-    section .item>ul li{
+    section .item>nav li{
         margin: 0 2% 30px 0;
         width: 48%;
         &:nth-child(2n){margin-right: 0;}
