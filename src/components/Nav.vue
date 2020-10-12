@@ -9,7 +9,7 @@
         <aside :class="flag?'switchColor enterAside':''">
             <!-- logo图标 -->
             <div class="logo">
-                <img src="https://s1.ax1x.com/2020/09/04/wkjLL9.png">
+                <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
                 <transition name="logo">
                     <span v-show="!isCollapse">Simon</span>
                 </transition>
@@ -45,16 +45,16 @@
             <!-- 顶部导航 -->
             <header :class="flag?'black':'white'">
                 <div>
-                    <img src="https://s1.ax1x.com/2020/09/04/wkjLL9.png">
+                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
                     <i class="el-icon-s-unfold" @click="showCollapse" v-show="show"></i>
                     <i class="el-icon-s-fold" @click="hideCollapse" v-show="hide"></i>
                     <nav>
                         <li><router-link to="/link"><i class="el-icon-s-home"></i>
                             首页</router-link></li>
-                        <li><a href="http://www.linncode.cn" target="_blank">
+                        <li><a href="http://www.linncode.cn:9240" target="_blank">
                         <i class="el-icon-user"></i>西蒙首页</a></li>
                         <li><a href="http://www.linncode.cn:9547" target="_blank">
-                        <i class="el-icon-notebook-1"></i>个人博客</a></li>
+                        <i class="el-icon-notebook-1"></i>西蒙博客</a></li>
                     </nav>
                 </div>
             </header>
@@ -210,7 +210,7 @@ export default {
                 },
             ],
             asideData2:[//左侧导航数据2
-                {id:0,className:'el-icon-notebook-1',title:'个人博客'},
+                {id:0,className:'el-icon-notebook-1',title:'西蒙博客'},
                 {id:1,className:'el-icon-user',title:'西蒙首页'}
             ],
             city:'',//当前城市
