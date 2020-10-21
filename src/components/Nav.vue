@@ -51,9 +51,9 @@
                     <nav>
                         <li><router-link to="/link"><i class="el-icon-s-home"></i>
                             首页</router-link></li>
-                        <li><a href="http://www.linncode.cn:9240" target="_blank">
+                        <li><a href="http://home.linncode.cn" target="_blank">
                         <i class="el-icon-user"></i>西蒙首页</a></li>
-                        <li><a href="http://www.linncode.cn:9547" target="_blank">
+                        <li><a href="http://blog.linncode.cn" target="_blank">
                         <i class="el-icon-notebook-1"></i>西蒙博客</a></li>
                     </nav>
                 </div>
