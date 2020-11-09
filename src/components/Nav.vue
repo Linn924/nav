@@ -2,8 +2,7 @@
     <div id="nav">
 
         <!-- 回到顶部 必须写在首位-->
-        <el-backtop><i class="fa fa-arrow-up" :class="flag?'backtopBlack':
-        'backtopWhite'"></i></el-backtop>
+        <el-backtop><i class="el-icon-caret-top"></i></el-backtop>
 
         <!-- 左侧栏 -->
         <aside :class="flag?'switchColor enterAside':''">
@@ -33,18 +32,59 @@
             <!-- 折叠栏二 -->
             <el-menu :class="flag?'two switchColor':'two'" :collapse="isCollapse">
                 <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" 
-                    :style="{'color':flag?'#fff':'#000'}">
+                    :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
                     <i :class="item.className"></i>
                     <span slot="title">{{item.title}}</span>
                 </el-menu-item>
             </el-menu>
         </aside>
 
+        <!-- 蒙版 -->
+        <transition name="mengban">
+            <div class="mengban" v-show="drawer" @click="drawer = !drawer"></div>
+        </transition>
+
+        <!-- 移动端状态下的导航抽屉 -->
+        <transition name="drawer">
+            <div class="drawer" v-show="drawer">
+                <!-- logo图标 -->
+                <div class="logo">
+                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
+                    <transition name="logo">
+                        <span>Simon</span>
+                    </transition>
+                </div>
+                <el-menu :class="flag?'one switchColor':'one'" :unique-opened="true">
+                    <el-submenu v-for="item in asideData1" :key="item.id" :index="item.id">
+                        <template slot="title">
+                            <i :class="item.className" :style="{'margin':item.id == 5 
+                                || item.id == 6 ? '0 10px 0 5px': ''}"></i>
+                            <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{item.title}}</span>
+                        </template>
+                        <el-menu-item-group :class="flag?'switchColor enterAside':''">
+                            <span slot="title">{{item.title}}</span>
+                            <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
+                                @click="location(item.id,i.id,i.flag)" :style="{'color':flag?'#fff':'#000'}">
+                            {{i.title}}</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+                <!-- 折叠栏二 -->
+                <el-menu :class="flag?'two switchColor':'two'">
+                    <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" 
+                        :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
+                        <i :class="item.className"></i>
+                        <span slot="title">{{item.title}}</span>
+                    </el-menu-item>
+                </el-menu>
+            </div>
+        </transition>
+
         <!-- 右边内容区域 -->
         <section :style="{'padding-left':isCollapse ?'64px':'200px'}">
             <!-- 顶部导航 -->
             <header :class="flag?'black':'white'">
-                <div>
+                <div class="computer">
                     <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
                     <i class="el-icon-s-unfold" @click="showCollapse" v-show="show"></i>
                     <i class="el-icon-s-fold" @click="hideCollapse" v-show="hide"></i>
@@ -57,6 +97,10 @@
                         <i class="el-icon-notebook-1"></i>西蒙博客</a></li>
                     </nav>
                 </div>
+                <div class="phone">
+                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
+                    <i class="el-icon-s-operation" @click="drawer = !drawer"></i>
+                </div>
             </header>
 
             <!-- 中间链接内容-->
@@ -64,7 +108,7 @@
 
         </section>
 
-        <!-- 右下角 -->
+        <!-- 右下角天气 -->
         <div class="weatherBox">
             <!-- 天气盒子 -->
             <div class="weather">
@@ -89,7 +133,7 @@
                 </div>
             </div>
             <!-- 切换主题 -->
-            <div class="toggleMode">
+            <!-- <div class="toggleMode">
                 <el-tooltip effect="dark" content="日间模式" placement="left">
                     <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
                     v-show="sunny" @click="switchMoon"></i>
@@ -98,7 +142,7 @@
                     <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
                     v-show="moon" @click="switchSunny"></i>
                 </el-tooltip>
-            </div>
+            </div> -->
         </div>
 
     </div>
@@ -210,8 +254,8 @@ export default {
                 },
             ],
             asideData2:[//左侧导航数据2
-                {id:0,className:'el-icon-notebook-1',title:'西蒙博客'},
-                {id:1,className:'el-icon-user',title:'西蒙首页'}
+                {id:0,className:'el-icon-notebook-1',title:'西蒙博客',url:'http://blog.linncode.cn'},
+                {id:1,className:'el-icon-user',title:'西蒙首页',url:'http://home.linncode.cn'}
             ],
             city:'',//当前城市
             weatherList:[],//最近三天天气数据
@@ -223,7 +267,8 @@ export default {
             sunny:false,//控制切换到日间模式
             moon:true,//控制切换到夜间模式
             flag:false,//是否是日间模式
-            showWeather:false
+            showWeather:false,//是否展示天气
+            drawer:false
         }
     },
     computed:{
@@ -275,6 +320,10 @@ export default {
             //调用子组件方法
             this.$refs.Link.clickNav(fatherIndex,sonIndex,sonFlag)
         },
+        //打开个人链接
+        openWebsite(url){
+            window.open(url)
+        },
         //切换到日间模式
         switchSunny(){
             this.moon = false
@@ -309,7 +358,9 @@ export default {
                 item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
             })
             this.weatherList = value
-            this.wendu = ((Number(value[0].high.slice(3,5)) + Number(value[0].low.slice(3,5))) / 2) + '℃'
+            let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+            let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+            this.wendu = (high + low) / 2 + '℃'
             this.type = value[0].type
         }
     }
@@ -328,6 +379,22 @@ export default {
         display: flex;
         flex-direction: column;
     }
+    .drawer{
+        z-index: 999;
+        top: 0;
+        height: 100vh; 
+        background-color: #f9f9f9;
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+    }
+    .mengban{
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        background-color: rgba(0,0,0, .5);
+        z-index: 998;
+    }
     >section{
         width: 100vw;
         transition: all .5s;
@@ -335,16 +402,17 @@ export default {
     }
     .weatherBox{
         position: fixed;
-        top: 85vh;
-        right: 40px;
+        top: 92vh;
+        right: 25px;
         box-sizing: border-box;
         height: 100vh;
         display: flex;
         flex-direction: column;
+        z-index: 999;
     }
 }
 
-#nav>aside{
+#nav>aside,.drawer{
     .logo{
         margin: 10px auto;
         display: flex;
@@ -376,8 +444,8 @@ export default {
         position: fixed;
         display: flex;
         align-items: center;
-        z-index: 999;
-        div{
+        z-index: 997;
+        .computer{
             display: flex;
             align-items: center;
             position: relative;
@@ -406,7 +474,19 @@ export default {
                 }
             }
         }
-        
+        .phone{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            img{width: 50px;height: 50px;border-radius: 50%;margin-left: 20px;}
+            >i{
+                font-size: 24px;
+                color:#1E90FF;
+                margin: 0 20px 0 20px;
+                cursor: pointer;
+            }
+        }
     }
 }
 
@@ -416,6 +496,7 @@ export default {
         background-color: #eee;
         border-radius: 50%;
         cursor: pointer;
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.12);
         transition: color .25s;
     }
     .toggleMode{
@@ -440,6 +521,7 @@ export default {
             backdrop-filter: blur(2px);
             background: url(https://s1.ax1x.com/2020/10/08/00iVJO.jpg) no-repeat center;
             background-size: cover;
+            z-index: 999;
             header{
                 display: flex;
                 justify-content: space-between;
@@ -471,11 +553,13 @@ export default {
 }
 
 .backtopBlack{background-color: #363738!important;color: #AAA!important;}
-.backtopWhite{background-color: #ddd!important;color: #777!important;}
+.backtopWhite{background-color: #fff!important;color: #777!important;}
+
 .el-backtop{
     color: #777;
     font-size: 14px;
-    bottom: 146px!important;
+    right: 25px!important;
+    bottom: 80px!important;
     width: 40px;
     height: 40px;
     i{padding: 14px 15px;border-radius: 50%;}
@@ -508,23 +592,27 @@ header.black{
     background-attachment: fixed;
 }
 
+
+@keyframes drawerShow{from{left: -200px;}to{left: 0;}}
+@keyframes drawerHide{from{left: 0;}to{left: -200px;}}
 .switchColor{background-color: #2C2E2F!important;}
 .logo-enter,.logo-leave-to{opacity: 0;}
 .logo-enter-active{transition: all 1s;}
 .logo-leave-active{transition: all 0.2s;}
-
-@media screen and (max-width: 760px) {
-    #nav>aside,#nav>section>header>div>i{
-        display: none;
-    }
-    #nav>section>header>div>img{
-        display: block;
-        margin-right: 20px;
-    }
-    #nav>section{
-        padding-left: 0!important;
-    }
+.drawer-enter{
+    animation: drawerShow 1s linear forwards;
+    opacity: 0;
 }
+.drawer-leave-to{
+    animation: drawerHide 0.4s linear forwards;
+    opacity: 0;
+}
+.drawer-enter-active{transition: all 1s;}
+.drawer-leave-active{transition: all 0.4s;}
+.mengban-enter,.mengban-leave-to{opacity: 0;}
+.drawer-enter-active{transition: all 1s;}
+.drawer-leave-active{transition: all 0.4s;}
+
 
 .enterAside{
     div.el-submenu__title:hover{
@@ -535,4 +623,25 @@ header.black{
         color: #1e90ff!important;
     } 
 } 
+@media screen and (max-width: 760px) {
+    #nav>aside,#nav>section>header .computer,.weatherBox{
+        display: none!important;
+    }
+    #nav>section>header .computer>img{
+        display: block;
+        margin-right: 20px;
+    }
+    #nav>section{
+        padding-left: 0!important;
+    }
+    #nav>.el-backtop{
+        right: 18px!important;
+        bottom: 20px!important;
+    }
+}
+@media screen and (min-width: 761px) { 
+    section header .phone{
+        display: none!important;
+    }
+}
 </style>

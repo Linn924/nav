@@ -36,13 +36,13 @@
             <section>
                 <div class="item" v-for="item in NAVData" :key="item.id">
                     <!-- 提示文字 -->
-                    <label :style="{'color':flag?'#888':'#000'}">
+                    <label>
                         <i class="el-icon-price-tag"></i>
                         <span>{{item.title}}</span>
                     </label>
                     <!-- 小导航 -->
                     <div>
-                        <nav :style="{'background-color':flag?'#181A1C':'#E0E0E0'}">
+                        <nav>
                             <li class="back" :style="{'width':item.navList[0].flag ? '56px' : '28px'}"></li>
                             <li v-for="itm in item.navList" :key="itm.id" :class="itm.id == 0 ?'currentLi':''" 
                                 @click="clickNav(item.id,itm.id,itm.flag)" 
@@ -51,7 +51,7 @@
                                 {{itm.navName}}
                             </li>
                         </nav>
-                        <span :style="{'color':flag?'#fff':'#000'}">more+</span>
+                        <!-- <span>more+</span> -->
                     </div>
                     <!-- 数据 -->
                     <nav v-for="it in item.navData" :key="it.id" v-show="it.id === indexArr[item.id].index">
@@ -60,7 +60,7 @@
                             <a :href="i.path" target="_blank">
                                 <img src="https://s1.ax1x.com/2020/05/09/YMs8DP.jpg" alt="" v-show="false">
                                 <div>
-                                    <strong :style="{'color':flag?'#fff':'#000'}">{{i.title}}</strong>
+                                    <strong>{{i.title}}</strong>
                                     <span>{{i.content}}</span>
                                 </div>
                             </a>
@@ -69,12 +69,15 @@
                 </div>
             </section>
             <!-- 底部备案 -->
-            <footer :style="{'color':flag?'#fff':'#000'}">
-                Copyright © 2020 简约导航 苏ICP备20023864号   Design by Simon
+            <footer>
+                <section>
+                    <p>© 2020 - 2021 Simon 版权所有</p>
+                    <p>苏ICP备20023864号</p>
+                </section>
             </footer>
         </main>
 
-         
+ 
     </div>
 </template>
 
@@ -266,6 +269,7 @@ export default {
 #link{
     width: 100%;
     min-height: 100vh;
+    min-width: 375px;
     background-color: #F9F9F9;
     transition: color .25s;
     >header{
@@ -285,6 +289,15 @@ export default {
             width: 95%;
             margin: 0 auto;
             font-size: 12px;
+            section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center; 
+                p{
+                    margin-bottom: 5px;
+                }  
+            }
         }
     }
 }
@@ -497,10 +510,16 @@ section{
   }                  
 }
 
+@media screen and (min-width: 1920px) {
+    section .item>nav li{
+        margin: 0 30px 30px 0;
+        width: 270px;
+    }
+}
 @media screen and (min-width: 1680px) and (max-width: 1920px) {
     section .item>nav li{
-        margin: 0 1.59% 30px 0;
-        width: 15.34%;
+        margin: 0 2% 30px 0;
+        width: 15%;
         &:nth-child(6n){margin-right: 0;}
     }
 }
@@ -536,6 +555,14 @@ section{
     }
     .search input{
         width: 500px!important;
+    }
+}
+@media screen and (max-width: 600px) { 
+    header{
+        height: 7.5vh!important;
+    }
+    header nav,header .line,header .search{
+        display: none!important;
     }
 }
 </style>
