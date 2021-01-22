@@ -1,16 +1,15 @@
 <template>
     <div id="nav">
 
-        <!-- 回到顶部 必须写在首位-->
         <el-backtop><i class="el-icon-caret-top"></i></el-backtop>
 
-        <!-- 左侧栏 -->
+        <!-- 左侧栏导航 -->
         <aside :class="flag?'switchColor enterAside':''">
             <!-- logo图标 -->
             <div class="logo">
-                <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
+                <img src="../assets/logo.jpg">
                 <transition name="logo">
-                    <span v-show="!isCollapse">Simon</span>
+                    <span v-show="!isCollapse">LinnCooper</span>
                 </transition>
             </div>
             <!-- 折叠栏一 -->
@@ -49,7 +48,7 @@
             <div class="drawer" v-show="drawer">
                 <!-- logo图标 -->
                 <div class="logo">
-                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
+                    <img src="../assets/logo.jpg">
                     <transition name="logo">
                         <span>Simon</span>
                     </transition>
@@ -85,20 +84,36 @@
             <!-- 顶部导航 -->
             <header :class="flag?'black':'white'">
                 <div class="computer">
-                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
-                    <i class="el-icon-s-unfold" @click="showCollapse" v-show="show"></i>
-                    <i class="el-icon-s-fold" @click="hideCollapse" v-show="hide"></i>
+                    <img src="../assets/logo.jpg">
+                    <svg class="icon" aria-hidden="true" 
+                        @click="hideCollapse" v-show="hide">
+                        <use xlink:href="#icon-fold"></use>
+                    </svg>
+                    <svg class="icon" aria-hidden="true" 
+                        @click="showCollapse" v-show="show">
+                        <use xlink:href="#icon-open"></use>
+                    </svg>
                     <nav>
-                        <li><router-link to="/link"><i class="el-icon-s-home"></i>
-                            首页</router-link></li>
-                        <li><a href="http://home.linncode.cn" target="_blank">
-                        <i class="el-icon-user"></i>西蒙首页</a></li>
-                        <li><a href="http://blog.linncode.cn" target="_blank">
-                        <i class="el-icon-notebook-1"></i>西蒙博客</a></li>
+                        <li>
+                            <router-link to="/link" style="color:#2468F2;">
+                                <svg class="icon-mini" aria-hidden="true">
+                                    <use xlink:href="#icon-home"></use>
+                                </svg>
+                                <span>主页</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/link">
+                                <svg class="icon-mini" aria-hidden="true">
+                                    <use xlink:href="#icon-link"></use>
+                                </svg>
+                                <span>友情链接</span>
+                            </router-link>
+                        </li>
                     </nav>
                 </div>
                 <div class="phone">
-                    <img src="https://s1.ax1x.com/2020/10/12/0WPkND.jpg">
+                    <img src="../assets/logo.jpg">
                     <i class="el-icon-s-operation" @click="drawer = !drawer"></i>
                 </div>
             </header>
@@ -113,7 +128,7 @@
             <!-- 天气盒子 -->
             <div class="weather">
                 <!-- <i :class="flag?'el-icon-heavy-rain backtopBlack':'el-icon-heavy-rain backtopWhite'"  -->
-                <i :class="className" 
+                <!-- <i :class="className" 
                     @mouseenter="showWeather = true" @mouseleave="showWeather = false"></i>
                 <div v-show="showWeather" @mouseenter="showWeather = true" 
                     @mouseleave="showWeather = false">
@@ -130,7 +145,7 @@
                             </tr>
                         </table>
                     </footer>
-                </div>
+                </div> -->
             </div>
             <!-- 切换主题 -->
             <!-- <div class="toggleMode">
@@ -337,32 +352,32 @@ export default {
             this.flag = false
         },
         //获取当前地址,使用jsonp解决跨域问题 (get请求)
-        async getLoactionCity(){
-            const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
-            this.city = data.city
-            this.getWeather(data.city)
-        },
+        // async getLoactionCity(){
+        //     const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
+        //     this.city = data.city
+        //     this.getWeather(data.city)
+        // },
         //根据城市获取城市天气
-        async getWeather(location){
-            const {data:res} = await this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
-            if(res.status !== 1000) return this.$message.error('获取天气数据失败')
-            const value = res.data.forecast.slice(0,3)
-            this.handleWeatherData(value)
-        },
+        // async getWeather(location){
+        //     const {data:res} = await this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
+        //     if(res.status !== 1000) return this.$message.error('获取天气数据失败')
+        //     const value = res.data.forecast.slice(0,3)
+        //     this.handleWeatherData(value)
+        // },
         //处理天气数据
-        handleWeatherData(value){
-            value.map( (item,index) => {
-                if(index == 0){item.date = '今天';}
-                else if(index == 1){item.date = '明天';}
-                else{item.date = '后天';}
-                item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
-            })
-            this.weatherList = value
-            let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-            let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-            this.wendu = (high + low) / 2 + '℃'
-            this.type = value[0].type
-        }
+        // handleWeatherData(value){
+        //     value.map( (item,index) => {
+        //         if(index == 0){item.date = '今天';}
+        //         else if(index == 1){item.date = '明天';}
+        //         else{item.date = '后天';}
+        //         item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
+        //     })
+        //     this.weatherList = value
+        //     let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+        //     let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+        //     this.wendu = (high + low) / 2 + '℃'
+        //     this.type = value[0].type
+        // }
     }
 }
 </script>
@@ -420,7 +435,7 @@ export default {
         align-items: center;
         cursor: pointer;
         img{width: 50px;height: 50px;border-radius: 50%;}
-        span{margin-left: 10px;color: #1E90FF;}
+        span{margin-left: 10px;color: #2468F2;}
     }
     .one:not(.el-menu--collapse) {
         width: 200px;
@@ -434,7 +449,7 @@ export default {
     }
     .one,.two{border: 0;background-color: #f9f9f9;}
     .two{margin-top: auto;}
-    .el-menu-item{&:hover{color: #1E90FF!important;}}
+    .el-menu-item{&:hover{color: #2468F2!important;}}
 }
 
 #nav>section{
@@ -449,11 +464,10 @@ export default {
             display: flex;
             align-items: center;
             position: relative;
-            >i{
-                font-size: 24px;
-                color: #888888;
+            >.icon{
+                color: #909399;
                 transition: color .25s;
-                &:hover{color: #1E90FF!important;}
+                &:hover{color: #2468F2!important;}
                 margin: 0 20px 0 20px;
                 cursor: pointer;
             }
@@ -464,11 +478,11 @@ export default {
                 li{margin-right: 20px;
                     a{
                         color: #000;
+                        font-size: 14px;
                         transition: color .25s;
                         cursor: pointer;
-                        &:hover{color: #1E90FF!important;}
-                        font-size: 14px;
-                        i{margin-right: 2px;}
+                        &:hover{color: #2468F2!important;}
+                        span{margin-left: 2px;}
                     }
                     
                 }
@@ -482,7 +496,7 @@ export default {
             img{width: 50px;height: 50px;border-radius: 50%;margin-left: 20px;}
             >i{
                 font-size: 24px;
-                color:#1E90FF;
+                color:#2468F2;
                 margin: 0 20px 0 20px;
                 cursor: pointer;
             }
@@ -537,7 +551,7 @@ export default {
                 span:first-child{font-size: 50px;}
                 span:last-child{
                     font-size: 14px;
-                    background-color: #1e90ff;
+                    background-color: #2468F2;
                     border-radius: 5px;
                     padding: 2px 5px;
                 }
@@ -616,11 +630,11 @@ header.black{
 
 .enterAside{
     div.el-submenu__title:hover{
-        span{color: #1e90ff!important;}
+        span{color: #2468F2!important;}
     }
     li.el-menu-item:hover{
         background-color: #1B1D1F!important;
-        color: #1e90ff!important;
+        color: #2468F2!important;
     } 
 } 
 @media screen and (max-width: 760px) {

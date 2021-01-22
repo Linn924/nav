@@ -6,8 +6,8 @@ import './assets/css/global.css'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-axios.defaults.baseURL='http://139.196.210.43:0924/'
-// axios.defaults.baseURL='http://localhost:8888/'
+// axios.defaults.baseURL='http://139.196.210.43:0924/'
+axios.defaults.baseURL='http://localhost:8888/'
 
 axios.interceptors.request.use(config => {
   NProgress.start()

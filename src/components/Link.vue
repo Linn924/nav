@@ -58,7 +58,7 @@
                         <li v-for="i in it.children" :key="i.id" :class="flag?'liBlack':'liWhite'" 
                             @mouseenter="liUp(item.id,it.id,i.id)" @mouseleave="liDown(item.id,it.id,i.id)">
                             <a :href="i.path" target="_blank">
-                                <img src="https://s1.ax1x.com/2020/05/09/YMs8DP.jpg" alt="" v-show="false">
+                                <img src="../assets/logo.jpg" alt="" v-show="true">
                                 <div>
                                     <strong>{{i.title}}</strong>
                                     <span>{{i.content}}</span>
@@ -158,7 +158,7 @@ export default {
     methods: {
         //获取NavData数据
         async getNavData(){
-            const {data:res} = await this.$http.get('getnavdata')
+            const {data:res} = await this.$http.get('navs')
             if(res.data.code != 200) return this.$message.error('获取数据失败')
             this.NAVData = res.data.data.data
             this.pushData(this.NAVData.length)
