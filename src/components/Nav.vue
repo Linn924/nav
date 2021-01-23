@@ -365,19 +365,19 @@ export default {
         //     this.handleWeatherData(value)
         // },
         //处理天气数据
-        // handleWeatherData(value){
-        //     value.map( (item,index) => {
-        //         if(index == 0){item.date = '今天';}
-        //         else if(index == 1){item.date = '明天';}
-        //         else{item.date = '后天';}
-        //         item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
-        //     })
-        //     this.weatherList = value
-        //     let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-        //     let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-        //     this.wendu = (high + low) / 2 + '℃'
-        //     this.type = value[0].type
-        // }
+        handleWeatherData(value){
+            value.map( (item,index) => {
+                if(index == 0){item.date = '今天';}
+                else if(index == 1){item.date = '明天';}
+                else{item.date = '后天';}
+                item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
+            })
+            this.weatherList = value
+            let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+            let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
+            this.wendu = (high + low) / 2 + '℃'
+            this.type = value[0].type
+        }
     }
 }
 </script>
