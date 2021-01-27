@@ -1,83 +1,63 @@
 <template>
     <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#f9f9f9'}">
 
-        <!-- 搜索框部分 -->
         <header>
-            <!-- 搜索框上面的ul -->
-            <nav id="ulOne">
-                <li v-for="item in ulOne" :key="item.id" 
-                    :class="item.id == 0 ? 'currentLi':''" 
-                    @click="switchUl(item.id)">
+            <nav id="navTop">
+                <li v-for="item in navTop" :key="item.id" 
+                    :class="item.id == 0 ? 'currentLi':''" @click="switchUl(item.id)">
                     {{item.title}}
                 </li>
             </nav>
-            <!-- 可移动的线 -->
+
             <div class="line"></div>
-            <!-- 搜索框 -->
+
             <div class="search">
-                <input type="text" :placeholder="value" 
-                ref="search" v-model="searchValue" @keyup.enter.native="search">
+                <input type="text" :placeholder="value" ref="search" 
+                    v-model="searchValue" @keyup.enter.native="search">
                 <button @click="search"><i class="el-icon-search"></i></button>
             </div>
-            <!-- 搜索框下面的ul -->
-            <nav id="ulTwo" v-for="(item,index) in ulTwo" 
-                :key="index" v-show="index == currentIndex">
+
+            <nav id="navBottom" v-for="(item,index) in navBottom" :key="index" 
+                v-show="index == searchIndex">
                 <li v-for="i in item.children" :key="i.id" 
-                    :class="i.id == 0 ? 'currentLi':''" 
-                    @click="switchLi(i.id,i.path)">
+                    :class="i.id == 0 ? 'currentLi':''" @click="switchLi(i.id,i.path)">
                     {{i.title}}
                 </li>
             </nav>
         </header>
 
-        <!-- 内容区域 -->
         <main>
-            <!-- 主要内容 -->
             <section>
-                <div class="item" v-for="item in NAVData" :key="item.id">
-                    <!-- 提示文字 -->
-                    <label>
-                        <i class="el-icon-price-tag"></i>
-                        <span>{{item.title}}</span>
-                    </label>
-                    <!-- 小导航 -->
-                    <div>
-                        <nav>
-                            <li class="back" :style="{'width':item.navList[0].flag ? '56px' : '28px'}"></li>
-                            <li v-for="itm in item.navList" :key="itm.id" :class="itm.id == 0 ?'currentLi':''" 
-                                @click="clickNav(item.id,itm.id,itm.flag)" 
-                                @mouseenter="enterNav(item.id,itm.id,itm.flag)" 
-                                @mouseleave="leaveNav(item.id)">
-                                {{itm.navName}}
+                <div class="item" v-for="(father,fId) in navList" :key="fId">
+                    <label><i :class="father.className"></i><span>{{father.name}}</span></label>
+
+                    <div><nav>
+                            <li class="back"></li>
+                            <li v-for="(son,sId) in father.one" :key="sId" 
+                                :class="sId == 0 ?'currentLi':''" @click="clickNavs(fId,sId)" 
+                                @mouseenter="enterNavs(fId,sId)" @mouseleave="leaveNavs(fId)">
+                                {{son.name}}
                             </li>
-                        </nav>
-                        <!-- <span>more+</span> -->
+                        </nav><span>more+</span>
                     </div>
-                    <!-- 数据 -->
-                    <nav v-for="it in item.navData" :key="it.id" v-show="it.id === indexArr[item.id].index">
-                        <li v-for="i in it.children" :key="i.id" :class="flag?'liBlack':'liWhite'" 
-                            @mouseenter="liUp(item.id,it.id,i.id)" @mouseleave="liDown(item.id,it.id,i.id)">
-                            <a :href="i.path" target="_blank">
+
+                    <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId === clickIndex[fId].index">
+                        <li v-for="(grandson,grandsId) in son.children" :key="grandsId" 
+                            :class="flag?'liBlack':'liWhite'" @mouseenter="up(fId,sId,grandsId)" 
+                            @mouseleave="down(fId,sId,grandsId)">
+                            <a :href="grandson.url" target="_blank">
                                 <img src="../assets/logo.jpg" alt="" v-show="true">
-                                <div>
-                                    <strong>{{i.title}}</strong>
-                                    <span>{{i.content}}</span>
-                                </div>
+                                <div><strong>{{grandson.name}}</strong><span>{{grandson.title}}</span></div>
                             </a>
                         </li>
                     </nav>
                 </div>
             </section>
-            <!-- 底部备案 -->
-            <footer>
-                <section>
-                    <p>© 2020 - 2021 Simon 版权所有</p>
-                    <p>苏ICP备20023864号</p>
+            <footer><section>
+                    <p>© 2020 - 2021 Simon 版权所有</p><p>苏ICP备20023864号</p>
                 </section>
             </footer>
         </main>
-
- 
     </div>
 </template>
 
@@ -86,14 +66,14 @@ export default {
     props:['flag'],
     data(){
         return {
-            ulOne:[
+            navTop:[
                 {id:0,title:'搜索'},
                 {id:1,title:'网盘'},
                 {id:2,title:'软件'},
                 {id:3,title:'书籍'},
-                {id:4,title:'菜谱'},
+                {id:4,title:'菜谱'}
             ],
-            ulTwo:[
+            navBottom:[
                 {
                     children:[
                         {id:0,title:'百度',path:'https://www.baidu.com/s?wd='},
@@ -138,110 +118,109 @@ export default {
                 },
                 
             ],
-            currentIndex:0,//点击UIOne中的li，它的下标赋值给此变量
+            searchIndex:0,//当前指向navTop的下标
             value:'百度',//初始搜索框中的内容
             searchValue:'',//输入的内容
-            searchPath:'https://www.baidu.com/s?wd=',//初始搜索框的地址值
-            flagNav:false,//未点击有蓝色背景的导航
-            blueBgIndexArr:[],//默认所有蓝色背景均在下标为1的li下面
-            blueBgPositionArr:[],//默认所有蓝色背景距左的初始距离都为零
-            indexArr:[],//点击小导航将其导航li的下表传给对应的对象中的index
-            NAVData:[],//所有内容数据
+            searchUrl:'https://www.baidu.com/s?wd=',//初始搜索框的地址值
+            isClick:false,//是否点击蓝色背景导航
+            blueBgIndex:[],//记录蓝色背景的位置，默认都为1
+            blueBgPosition:[],//记录蓝色背景距离左边的距离，默认都为3
+            clickIndex:[],//记录点击的导航的下标，默认都为1
+            navList:[],//所有导航数据
         }
     },
     created() {
-        this.getNavData()//页面渲染之前
+        this.getNavs()
     },
     mounted() {
-        this.searchFocus()//页面渲染完成，搜索框聚焦
+        this.$refs.search.focus()
+    },
+    updated() {
+        for(let i = 0; i < this.navList.length; i++){this.leaveNavs(i)}
     },
     methods: {
-        //获取NavData数据
-        async getNavData(){
+        //获取导航数据
+        async getNavs(){
             const {data:res} = await this.$http.get('navs')
-            if(res.data.code != 200) return this.$message.error('获取数据失败')
-            this.NAVData = res.data.data.data
-            this.pushData(this.NAVData.length)
+            if(res.code != 200) 
+            return this.$message({message:'获取数据失败',type:'error',duration:1000})
+            this.navList = res.data
+            this.dealNavs(this.navList.length)
         },
-        //根据NAVData数组的长度给定义的数组添加初始数据
-        pushData(number){
-            for(let i = 0;i<number;i++){
-                this.blueBgIndexArr.push(1)
-                this.blueBgPositionArr.push(3)
-                this.indexArr.push({index:0})
-            }
-        },
-        //聚焦搜索框
-        searchFocus(){
-            this.$refs.search.focus()
+        //根据获取的导航数据初始化数组
+        dealNavs(number){
+            this.blueBgIndex = Array.from({length:number},() => 1)
+            this.blueBgPosition = Array.from({length:number},() => 3)
+            this.clickIndex = Array.from({length:number},() => ({index:1}))
         },
         //点击切换ulTwo的值
         switchUl(index){
-            var lis = document.querySelectorAll('#ulOne>li')
-            var uls = document.querySelectorAll('#ulTwo')
+            var lis = document.querySelectorAll('#navTop>li')
+            var uls = document.querySelectorAll('#navBottom')
             var line = document.querySelector('.line')
             this.removeClass(lis,index)
             line.style.marginLeft = -273 + 136*index + 'px'
-            this.currentIndex = index
+            this.searchIndex = index
             this.value = uls[index].children[0].innerHTML
-            this.ulTwo.some( (item,i) => {
+            this.navBottom.some( (item,i) => {
                 if(i == index){
                     this.switchLi(0,item.children[0].path)//重置回最初始的状态
                     return true
                 }
             })
-            this.searchFocus() 
+            this.$refs.search.focus()
         },
         //点击切换ulTwo的li
         switchLi(index,path){
-            var lis = document.querySelectorAll('#ulTwo')[this.currentIndex].children
+            var lis = document.querySelectorAll('#navBottom')[this.searchIndex].children
             this.removeClass(lis,index)
             this.value = lis[index].innerHTML
-            this.searchPath = path
-            this.searchFocus()
+            this.searchUrl = path
+            this.$refs.search.focus()
         },
         //搜索
         search(){
-            if((this.searchValue.trim()) == '') return this.$message({type:'error',duration:1000,message:'请输入内容'})
-            window.open(this.searchPath+this.searchValue)
+            if((this.searchValue.trim()) == '') 
+            return this.$message({type:'error',duration:1000,message:'请输入内容'})
+            window.open(this.searchUrl + this.searchValue)
             this.searchValue = ''
         },
-        //鼠标移入导航的li
-        enterNav(fatherIndex,sonIndex,sonFlag){
-            var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
-            this.flagNav = false
-            lis[0].style.left = lis[sonIndex+1].offsetLeft + 'px'
-            lis[0].style.width =  (sonFlag ? '56' : '28') + 'px'
-            this.removeClass(lis,sonIndex+1)
+        //鼠标移入导航
+        enterNavs(fId,sId){
+            var lis = document.querySelectorAll('.item>div nav')[fId].children
+            this.isClick = false
+            lis[0].style.left = lis[sId + 1].offsetLeft + 'px'
+            lis[0].style.width = lis[sId + 1].offsetWidth - 20 + 'px'
+            this.removeClass(lis,sId + 1)
         },
-        //鼠标移出导航的li
-        leaveNav(fatherIndex){
-            if(!this.flagNav){
-                var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
-                lis[0].style.left = this.blueBgPositionArr[fatherIndex] + 'px'
-                lis[0].style.width =  (this.NAVData[fatherIndex].navList[this.blueBgIndexArr[fatherIndex]-1].flag ? '56' : '28') + 'px'
-                this.removeClass(lis,this.blueBgIndexArr[fatherIndex])
+        //鼠标移出导航
+        leaveNavs(fId){
+            if(!this.isClick){
+                var lis = document.querySelectorAll('.item>div nav')[fId].children
+                lis[0].style.left = this.blueBgPosition[fId] + 'px'
+                lis[0].style.width = lis[this.clickIndex[fId].index].offsetWidth - 20 + 'px'
+                this.removeClass(lis,this.blueBgIndex[fId])
             }
         },
-        //鼠标点击导航的li
-        clickNav(fatherIndex,sonIndex,sonFlag){
-            var lis = document.querySelectorAll('.item>div nav')[fatherIndex].children
-            this.flagNav = true
-            this.blueBgPositionArr[fatherIndex] = lis[sonIndex+1].offsetLeft
-            lis[0].style.left = lis[sonIndex+1].offsetLeft + 'px'
-            lis[0].style.width =  (sonFlag ? '56' : '28') + 'px'
-            this.removeClass(lis,sonIndex+1)
-            this.blueBgIndexArr[fatherIndex] = sonIndex+1
-            this.indexArr[fatherIndex].index = sonIndex
+        //点击导航
+        clickNavs(fId,sId){
+            var lis = document.querySelectorAll('.item>div nav')[fId].children
+            this.isClick = true
+            this.blueBgPosition[fId] = lis[sId + 1].offsetLeft
+            lis[0].style.left = lis[sId + 1].offsetLeft + 'px'
+            lis[0].style.width = lis[sId + 1].offsetWidth - 20 + 'px'
+            this.removeClass(lis,sId + 1)
+            this.blueBgIndex[fId] = sId + 1
+            this.clickIndex[fId].index = sId
         },
-        //排他思想
+        //清除样式
         removeClass(dom,i){
             dom.forEach( item => item.classList.remove('currentLi'))
             dom[i].className = 'currentLi'
         },
-        //鼠标移入内容区域上移
-        liUp(fatherIndex,sonIndex,grandsonIndex){
-            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('nav')[sonIndex+1].children[grandsonIndex]
+        //导航上浮动画
+        up(fId,sId,grandsId){
+            var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
             if(!this.flag){
                 li.classList.remove('downWhite')
                 li.classList.add('upWhite')
@@ -250,9 +229,9 @@ export default {
                 li.classList.add('upBlack')
             }
         },
-        //鼠标移出内容区域下降
-        liDown(fatherIndex,sonIndex,grandsonIndex){
-            var li = document.querySelectorAll('.item')[fatherIndex].querySelectorAll('nav')[sonIndex+1].children[grandsonIndex]
+        //导航下降动画
+        down(fId,sId,grandsId){
+            var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
             if(!this.flag){
                 li.classList.remove('upWhite')
                 li.classList.add('downWhite')
@@ -367,9 +346,9 @@ section{
             font-size: 18px;
             font-weight: bold;
             i{
-                transform: rotate(90deg);
                 margin-right: 10px;
-                font-size: 24px;
+                font-size: 22px;
+                color: #909399;
             }
         }
         >div{
@@ -401,12 +380,17 @@ section{
                     height: 24px;
                     transform: translateY(-50%);
                     border-radius: 12px;
-                    background-color: #1E90FF;
+                    background-color: #2468F2;
                     z-index: 1;
                     transition: all .2s;
                 }
             }
-            span{&:hover{color: #1e90ff;}cursor: pointer;font-size: 14px;}
+            span{
+                &:hover{color: #2468F2;}
+                cursor: pointer;
+                font-size: 14px;
+                color: #909399;
+            }
         }
         >nav{
             display: flex;
@@ -450,7 +434,7 @@ section{
                     }
                 }
                 transition: all .25s;
-                &:hover{strong{color: #1E90FF!important;}}
+                &:hover{strong{color: #2468F2!important;}}
             }
         }
     }

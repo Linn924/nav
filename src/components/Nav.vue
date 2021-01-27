@@ -3,18 +3,16 @@
 
         <el-backtop><i class="el-icon-caret-top"></i></el-backtop>
 
-        <!-- 左侧栏导航 -->
         <aside :class="flag?'switchColor enterAside':''">
-            <!-- logo图标 -->
             <div class="logo">
                 <img src="../assets/logo.jpg">
                 <transition name="logo">
                     <span v-show="!isCollapse">LinnCooper</span>
                 </transition>
             </div>
-            <!-- 折叠栏一 -->
+
             <el-menu :class="flag?'one switchColor':'one'" :collapse="isCollapse" :unique-opened="true">
-                <el-submenu v-for="item in asideData1" :key="item.id" :index="item.id">
+                <el-submenu v-for="item in asideTop" :key="item.id" :index="item.id">
                     <template slot="title">
                         <i :class="item.className" :style="{'margin':item.id == 5 
                             || item.id == 6 ? '0 10px 0 5px': ''}"></i>
@@ -23,14 +21,14 @@
                     <el-menu-item-group :class="flag?'switchColor enterAside':''">
                         <span slot="title">{{item.title}}</span>
                         <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
-                            @click="location(item.id,i.id,i.flag)" :style="{'color':flag?'#fff':'#000'}">
+                            @click="location(item.id,i.id)" :style="{'color':flag?'#fff':'#000'}">
                         {{i.title}}</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
-            <!-- 折叠栏二 -->
+
             <el-menu :class="flag?'two switchColor':'two'" :collapse="isCollapse">
-                <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" 
+                <el-menu-item v-for="item in asideBottom" :key="item.id" :index="item.id" 
                     :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
                     <i :class="item.className"></i>
                     <span slot="title">{{item.title}}</span>
@@ -50,11 +48,12 @@
                 <div class="logo">
                     <img src="../assets/logo.jpg">
                     <transition name="logo">
-                        <span>Simon</span>
+                        <span>LinnCooper</span>
                     </transition>
                 </div>
+
                 <el-menu :class="flag?'one switchColor':'one'" :unique-opened="true">
-                    <el-submenu v-for="item in asideData1" :key="item.id" :index="item.id">
+                    <el-submenu v-for="item in asideTop" :key="item.id" :index="item.id">
                         <template slot="title">
                             <i :class="item.className" :style="{'margin':item.id == 5 
                                 || item.id == 6 ? '0 10px 0 5px': ''}"></i>
@@ -63,14 +62,14 @@
                         <el-menu-item-group :class="flag?'switchColor enterAside':''">
                             <span slot="title">{{item.title}}</span>
                             <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
-                                @click="location(item.id,i.id,i.flag)" :style="{'color':flag?'#fff':'#000'}">
+                                @click="location(item.id,i.id)" :style="{'color':flag?'#fff':'#000'}">
                             {{i.title}}</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
-                <!-- 折叠栏二 -->
+
                 <el-menu :class="flag?'two switchColor':'two'">
-                    <el-menu-item v-for="item in asideData2" :key="item.id" :index="item.id" 
+                    <el-menu-item v-for="item in asideBottom" :key="item.id" :index="item.id" 
                         :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
                         <i :class="item.className"></i>
                         <span slot="title">{{item.title}}</span>
@@ -79,9 +78,7 @@
             </div>
         </transition>
 
-        <!-- 右边内容区域 -->
         <section :style="{'padding-left':isCollapse ?'64px':'200px'}">
-            <!-- 顶部导航 -->
             <header :class="flag?'black':'white'">
                 <div class="computer">
                     <img src="../assets/logo.jpg">
@@ -93,8 +90,7 @@
                         @click="showCollapse" v-show="show">
                         <use xlink:href="#icon-open"></use>
                     </svg>
-                    <nav>
-                        <li>
+                    <nav><li>
                             <router-link to="/link" style="color:#2468F2;">
                                 <svg class="icon-mini" aria-hidden="true">
                                     <use xlink:href="#icon-home"></use>
@@ -118,17 +114,13 @@
                 </div>
             </header>
 
-            <!-- 中间链接内容-->
             <main><router-view ref="Link" :flag="flag"></router-view></main>
-
         </section>
 
-        <!-- 右下角天气 -->
         <div class="weatherBox">
-            <!-- 天气盒子 -->
             <div class="weather">
                 <!-- <i :class="flag?'el-icon-heavy-rain backtopBlack':'el-icon-heavy-rain backtopWhite'"  -->
-                <!-- <i :class="className" 
+                <i :class="className" 
                     @mouseenter="showWeather = true" @mouseleave="showWeather = false"></i>
                 <div v-show="showWeather" @mouseenter="showWeather = true" 
                     @mouseleave="showWeather = false">
@@ -145,10 +137,10 @@
                             </tr>
                         </table>
                     </footer>
-                </div> -->
+                </div>
             </div>
-            <!-- 切换主题 -->
-            <!-- <div class="toggleMode">
+
+            <div class="toggleMode">
                 <el-tooltip effect="dark" content="日间模式" placement="left">
                     <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
                     v-show="sunny" @click="switchMoon"></i>
@@ -157,9 +149,8 @@
                     <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
                     v-show="moon" @click="switchSunny"></i>
                 </el-tooltip>
-            </div> -->
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -167,7 +158,7 @@
 export default {
     data(){
         return {
-            asideData1:[//左侧导航数据1
+            asideTop:[//左侧导航数据1
                 {
                     id:0,
                     className:'el-icon-location',
@@ -268,9 +259,8 @@ export default {
                     ]
                 },
             ],
-            asideData2:[//左侧导航数据2
-                {id:0,className:'el-icon-notebook-1',title:'西蒙博客',url:'http://blog.linncode.cn'},
-                {id:1,className:'el-icon-user',title:'西蒙首页',url:'http://home.linncode.cn'}
+            asideBottom:[//左侧导航数据2
+                {id:0,className:'el-icon-warning-outline',title:'关于本站'}
             ],
             city:'',//当前城市
             weatherList:[],//最近三天天气数据
@@ -310,30 +300,27 @@ export default {
         }
     },
     created() {
-        this.getLoactionCity()//初始化前获取当前地址
-        //禁止鼠标右键点击
+        this.getLoactionCity()
         document.oncontextmenu =  () => {event.returnValue = false}
     },
     methods: {
-        //展开折叠
+        //展开
         showCollapse(){
             this.isCollapse = false
             this.show = false
             this.hide = true
         },
-        //关闭折叠
+        //折叠
         hideCollapse(){
             this.isCollapse = true
             this.show = true
             this.hide = false
         },
         //锚点跳转
-        location(fatherIndex,sonIndex,sonFlag){
-            var ul = document.querySelectorAll('.item>div nav')[fatherIndex]
-            var lis = ul.children
+        location(fId,sId){
+            var ul = document.querySelectorAll('.item>div nav')[fId]
             window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
-            //调用子组件方法
-            this.$refs.Link.clickNav(fatherIndex,sonIndex,sonFlag)
+            this.$refs.Link.clickNavs(fId,sId)
         },
         //打开个人链接
         openWebsite(url){
@@ -352,18 +339,19 @@ export default {
             this.flag = false
         },
         //获取当前地址,使用jsonp解决跨域问题 (get请求)
-        // async getLoactionCity(){
-        //     const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
-        //     this.city = data.city
-        //     this.getWeather(data.city)
-        // },
+        async getLoactionCity(){
+            const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
+            this.city = data.city
+            this.getWeather(data.city)
+        },
         //根据城市获取城市天气
-        // async getWeather(location){
-        //     const {data:res} = await this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
-        //     if(res.status !== 1000) return this.$message.error('获取天气数据失败')
-        //     const value = res.data.forecast.slice(0,3)
-        //     this.handleWeatherData(value)
-        // },
+        async getWeather(location){
+            const {data:res} = await this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
+            if(res.status !== 1000) 
+            return this.$message.error('获取天气数据失败')
+            const value = res.data.forecast.slice(0,3)
+            this.handleWeatherData(value)
+        },
         //处理天气数据
         handleWeatherData(value){
             value.map( (item,index) => {
@@ -417,7 +405,7 @@ export default {
     }
     .weatherBox{
         position: fixed;
-        top: 92vh;
+        top: 88vh;
         right: 25px;
         box-sizing: border-box;
         height: 100vh;
@@ -573,7 +561,7 @@ export default {
     color: #777;
     font-size: 14px;
     right: 25px!important;
-    bottom: 80px!important;
+    bottom: 12vh!important;
     width: 40px;
     height: 40px;
     i{padding: 14px 15px;border-radius: 50%;}
