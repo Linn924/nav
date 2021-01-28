@@ -41,10 +41,10 @@
                         </nav><span>more+</span>
                     </div>
 
-                    <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId === clickIndex[fId].index">
+                    <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
                         <li v-for="(grandson,grandsId) in son.children" :key="grandsId" 
                             :class="flag?'liBlack':'liWhite'" @mouseenter="up(fId,sId,grandsId)" 
-                            @mouseleave="down(fId,sId,grandsId)">
+                            @mouseleave="down(fId,sId,grandsId)"  @contextmenu.prevent="rightClickNavs(grandson)">
                             <a :href="grandson.url" target="_blank">
                                 <img src="../assets/logo.jpg" alt="" v-show="true">
                                 <div><strong>{{grandson.name}}</strong><span>{{grandson.title}}</span></div>
@@ -125,7 +125,7 @@ export default {
             isClick:false,//是否点击蓝色背景导航
             blueBgIndex:[],//记录蓝色背景的位置，默认都为1
             blueBgPosition:[],//记录蓝色背景距离左边的距离，默认都为3
-            clickIndex:[],//记录点击的导航的下标，默认都为1
+            clickIndex:[],//记录点击的导航的下标以及设置蓝色背景的宽度与下标为0的导航宽度相同，默认分别都为0,1
             navList:[],//所有导航数据
         }
     },
@@ -135,7 +135,7 @@ export default {
     mounted() {
         this.$refs.search.focus()
     },
-    updated() {
+    updated(){
         for(let i = 0; i < this.navList.length; i++){this.leaveNavs(i)}
     },
     methods: {
@@ -151,7 +151,7 @@ export default {
         dealNavs(number){
             this.blueBgIndex = Array.from({length:number},() => 1)
             this.blueBgPosition = Array.from({length:number},() => 3)
-            this.clickIndex = Array.from({length:number},() => ({index:1}))
+            this.clickIndex = Array.from({length:number},() => ({cIndex:0,bIndex:1}))
         },
         //点击切换navTop的值
         switchUl(index){
@@ -198,7 +198,7 @@ export default {
             if(!this.isClick){
                 var lis = document.querySelectorAll('.item>div nav')[fId].children
                 lis[0].style.left = this.blueBgPosition[fId] + 'px'
-                lis[0].style.width = lis[this.clickIndex[fId].index].offsetWidth - 20 + 'px'
+                lis[0].style.width = lis[this.clickIndex[fId].bIndex].offsetWidth - 20 + 'px'
                 this.removeClass(lis,this.blueBgIndex[fId])
             }
         },
@@ -211,7 +211,8 @@ export default {
             lis[0].style.width = lis[sId + 1].offsetWidth - 20 + 'px'
             this.removeClass(lis,sId + 1)
             this.blueBgIndex[fId] = sId + 1
-            this.clickIndex[fId].index = sId
+            this.clickIndex[fId].cIndex = sId
+            this.clickIndex[fId].bIndex = sId
         },
         //清除样式
         removeClass(dom,i){
@@ -239,6 +240,10 @@ export default {
                 li.classList.remove('upBlack')
                 li.classList.add('downBlack')
             }
+        },
+        //右击导航
+        rightClickNavs(navs){
+            console.log(navs)
         }
     }
 }
