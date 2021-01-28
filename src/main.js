@@ -21,10 +21,9 @@ axios.interceptors.response.use(config => {
 })
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios
+Vue.prototype.$axios = axios
 Vue.use(VueJsonp)
 
-//处理时间格式的过滤器
 Vue.filter('date', function (originVal) {
   const t = new Date(originVal)
   const y = t.getFullYear()

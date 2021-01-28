@@ -29,9 +29,13 @@
         <main>
             <section>
                 <div class="item" v-for="(father,fId) in navList" :key="fId">
-                    <label><i :class="father.className"></i><span>{{father.name}}</span></label>
+                    <label>
+                        <i :class="father.className" :style="{'color':flag ? '#888' : '#555',
+                            'fontSize':fId == 5 || fId == 6 ? '18px' : ''}"></i>
+                        <span :style="{'color':flag ? '#888' : '#555'}">{{father.name}}</span>
+                    </label>
 
-                    <div><nav>
+                    <div><nav :style="{'backgroundColor':flag ? '#181A1C' : '#E0E0E0'}">
                             <li class="back"></li>
                             <li v-for="(son,sId) in father.one" :key="sId" 
                                 :class="sId == 0 ?'currentLi':''" @click="clickNavs(fId,sId)" 
@@ -42,27 +46,49 @@
                     </div>
 
                     <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
-                        <li v-for="(grandson,grandsId) in son.children" :key="grandsId" 
+                        <li v-for="(grandson,grandsId) in son.children" :key="grandsId" title="右击编辑网站" 
                             :class="flag?'liBlack':'liWhite'" @mouseenter="up(fId,sId,grandsId)" 
                             @mouseleave="down(fId,sId,grandsId)"  @contextmenu.prevent="rightClickNavs(grandson)">
                             <a :href="grandson.url" target="_blank">
                                 <img src="../assets/logo.jpg" alt="" v-show="true">
-                                <div><strong>{{grandson.name}}</strong><span>{{grandson.title}}</span></div>
+                                <div>
+                                    <strong :style="{'color':flag ? '#C6C9CF' : '#282A2D'}">{{grandson.name}}</strong>
+                                    <span>{{grandson.title}}</span>
+                                </div>
                             </a>
+                        </li>
+                        <li :class="flag?'liBlack':'liWhite'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
+                            <i class="el-icon-plus" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
                         </li>
                     </nav>
                 </div>
             </section>
-            <footer><section>
+
+            <footer><section :style="{'color':flag ? '#C6C9CF' : '#282A2D'}">
                     <p>© 2020 - 2021 Simon 版权所有</p><p>苏ICP备20023864号</p>
                 </section>
             </footer>
         </main>
+
+        <transition name="dialog">
+            <div class="dialog" :style="{'backgroundColor':flag ? '#2C2E2F' : '#fff'}" v-show="visible">
+                <span :style="{'color':flag ? '#C6C9CF':'282A2D'}">添加自定义网站</span>
+                <input type="text" placeholder="网站名称" v-model="navsForm.name" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
+                <input type="text" v-model="navsForm.url" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
+                <textarea placeholder="描述点什么吧！" v-model="navsForm.title" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}"></textarea>
+                <div class="button">
+                    <button @click="postNavs">添加</button>
+                    <button @click="visible = false">取消</button>
+                </div>
+            </div>
+        </transition>
+
     </div>
 </template>
 
 <script>
 export default {
+    inject:['reload'],
     props:['flag'],
     data(){
         return {
@@ -127,6 +153,14 @@ export default {
             blueBgPosition:[],//记录蓝色背景距离左边的距离，默认都为3
             clickIndex:[],//记录点击的导航的下标以及设置蓝色背景的宽度与下标为0的导航宽度相同，默认分别都为0,1
             navList:[],//所有导航数据
+            navsForm:{
+                parentsId:Number,
+                brothersId:Number,
+                name:'',
+                title:'',
+                url:'https://'
+            },
+            visible:false,//对话框的样式 显示or隐藏
         }
     },
     created() {
@@ -141,7 +175,7 @@ export default {
     methods: {
         //获取导航数据
         async getNavs(){
-            const {data:res} = await this.$http.get('navs')
+            const {data:res} = await this.$axios.get('navs')
             if(res.code != 200) 
             return this.$message({message:'获取数据失败',type:'error',duration:1000})
             this.navList = res.data
@@ -244,6 +278,19 @@ export default {
         //右击导航
         rightClickNavs(navs){
             console.log(navs)
+        },
+        clickAddBtn(fId,sId){
+            this.navsForm.parentsId = fId
+            this.navsForm.brothersId = sId
+            this.visible = true
+        },
+        //添加自定义网站
+        async postNavs(){
+            const {data:res} = await this.$axios.post('navs',this.navsForm)
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
+            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            this.visible = false
+            this.reload()
         }
     }
 }
@@ -254,8 +301,6 @@ export default {
     width: 100%;
     min-height: 100vh;
     min-width: 375px;
-    background-color: #F9F9F9;
-    transition: color .25s;
     >header{
         height: 450px;
         background-color: rgb(7,7,27);
@@ -281,6 +326,23 @@ export default {
                 p{margin-bottom: 5px;}  
             }
         }
+    }
+    .dialog{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin:auto;
+        width: 500px;
+        height: 270px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 20px 0;
+        z-index: 999;
     }
 }
 
@@ -363,7 +425,6 @@ section{
                 height: 30px;
                 padding: 0 3px;
                 box-sizing: border-box;
-                background-color: #E0E0E0;
                 border-radius: 15px;
                 cursor: pointer;
                 position: relative;
@@ -400,8 +461,8 @@ section{
             list-style: none;
             li{
                 height: 70px;
-                background-color: #fff;
                 box-sizing: border-box;
+                border-radius: 4px;
                 a{
                     display: block;
                     width: 100%;
@@ -435,9 +496,65 @@ section{
                         text-overflow: ellipsis;
                     }
                 }
-                transition: all .25s;
                 &:hover{strong{color: #2468F2!important;}}
             }
+            li:last-child{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.dialog{
+    input{
+        width: 465px;
+        height: 35px;
+        border: none;
+        outline: none;
+        border-radius: 4px;
+        padding-left: 5px;
+        font-size: 15px;
+        color: #AAA;
+        &:nth-child(2){margin: 30px 0 10px 0;}
+    }
+    textarea{
+        width: 465px;
+        height: 50px;
+        resize: none;
+        border: none;
+        outline: none;
+        border-radius: 4px;
+        padding-left: 5px;
+        font-size: 15px;
+        color: #AAA;
+        margin: 10px 0 20px 0;
+        font-family: Helvetica;
+    }
+    .button{
+        display: flex;
+        justify-content: space-between;
+        width: 120px;
+    }
+    button{
+        padding: 8px 12px;
+        border: none;
+        outline: none;
+        border-radius: 2px;
+        cursor: pointer;
+        color: #fff;
+        &:first-child{
+            background-color: #2468F2;
+            transition: color .15s;
+            &:hover{background-color: #14171B;}
+        }
+        &:last-child{
+            background-color: #14171B;
+            transition: color .15s;
+            &:hover{background-color: #2468F2;}
         }
     }
 }
@@ -458,43 +575,55 @@ section{
 @keyframes upWhite {
   from{
       transform: translateY(0);
-      box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
   }
   to{
       transform: translateY(-10px);
-      box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
+      box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
   }                  
 }
 @keyframes downWhite {
   from{
       transform: translateY(-10px);
-      box-shadow: 2px 2px 2px #e2dede,-2px -2px 2px #e2dede;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
   }
   to{
       transform: translateY(0);
-      box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede;
+      box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
   }                  
 }
 @keyframes upBlack {
   from{
       transform: translateY(0);
-      box-shadow: 2px 2px 2px rgba(0,0,0, .2),-2px -2px 2px rgba(0,0,0, .2);
+      box-shadow: 2px 2px 2px rgba(255,255,255, .12),-2px -2px 2px rgba(255,255,255, .12);
   }
   to{
       transform: translateY(-10px);
-      box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2);
+      box-shadow: 6px 8px 12px rgba(255,255,255, .12),-6px 8px 12px rgba(255,255,255, .12);
   }                  
 }
 @keyframes downBlack {
   from{
       transform: translateY(-10px);
-      box-shadow: 2px 2px 2px  rgba(0,0,0, .2),-2px -2px 2px  rgba(0,0,0, .2);
+      box-shadow: 2px 2px 2px  rgba(255,255,255, .12),-2px -2px 2px  rgba(255,255,255, .12);
   }
   to{
       transform: translateY(0);
-      box-shadow: 6px 8px 12px  rgba(0,0,0, .2),-6px 8px 12px  rgba(0,0,0, .2);
+      box-shadow: 6px 8px 12px  rgba(255,255,255, .12),-6px 8px 12px  rgba(255,255,255, .12);
   }                  
 }
+
+.dialog-enter-active,
+.dialog-leave-active,
+.mask-enter-active,
+.mask-leave-active
+{transition: all .15s;}
+
+.dialog-enter,
+.dialog-leave-to,
+.mask-enter,
+.mask-leave-to
+{opacity: 0;}
 
 @media screen and (min-width: 1920px) {
     section .item>nav li{

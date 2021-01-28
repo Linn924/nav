@@ -1,7 +1,7 @@
 <template>
     <div id="nav">
 
-        <el-backtop><i class="el-icon-caret-top"></i></el-backtop>
+        <el-backtop><i :class="flag?'el-icon-caret-top backtopBlack':'el-icon-caret-top backtopWhite'"></i></el-backtop>
 
         <aside :class="flag?'switchColor enterAside':''">
             <div class="logo">
@@ -34,9 +34,9 @@
         </aside>
 
         <!-- 蒙版 -->
-        <transition name="mask">
+        <!-- <transition name="mask">
             <div class="mask" v-show="drawer" @click="drawer = !drawer"></div>
-        </transition>
+        </transition> -->
 
         <!-- 移动端状态下的导航抽屉 -->
         <transition name="drawer">
@@ -83,15 +83,15 @@
                         @click="isFold = false" v-show="isFold">
                         <use xlink:href="#icon-open"></use>
                     </svg>
-                    <nav><li v-for="(item,id) in routerList" :key="id">
-                            <router-link :to="item.router" :style="{'color':id == 0 ? '#2468F2' : ''}">
+                    <!-- <nav><li v-for="(item,id) in routerList" :key="id">
+                            <router-link :to="item.router">
                                 <svg class="icon-mini" aria-hidden="true">
                                     <use :xlink:href="item.className"></use>
                                 </svg>
                                 <span>{{item.name}}</span>
                             </router-link>
                         </li>
-                    </nav>
+                    </nav> -->
                 </div>
                 <div class="phone">
                     <img src="../assets/logo.jpg">
@@ -135,6 +135,8 @@
                 </el-tooltip>
             </div>
         </div>
+
+
     </div>
 </template>
 
@@ -148,12 +150,12 @@ export default {
                     className:'el-icon-location',
                     title:'常用站点',
                     children:[
-                        {id:0,title:'阅读',flag:false},
-                        {id:1,title:'购物',flag:false},
-                        {id:2,title:'直播',flag:false},
-                        {id:3,title:'国外',flag:false},
-                        {id:4,title:'视频',flag:false},
-                        {id:5,title:'工具',flag:false}
+                        {id:0,title:'阅读'},
+                        {id:1,title:'购物'},
+                        {id:2,title:'直播'},
+                        {id:3,title:'国外'},
+                        {id:4,title:'视频'},
+                        {id:5,title:'工具'}
                     ]
                 },
                 {
@@ -161,11 +163,11 @@ export default {
                     className:'el-icon-video-camera-solid',
                     title:'视频直播',
                     children:[
-                        {id:0,title:'免费在线',flag:true},
-                        {id:1,title:'高清下载',flag:true},
-                        {id:2,title:'追剧',flag:false},
-                        {id:3,title:'动漫',flag:false},
-                        {id:4,title:'解析',flag:false}
+                        {id:0,title:'免费在线'},
+                        {id:1,title:'高清下载'},
+                        {id:2,title:'追剧'},
+                        {id:3,title:'动漫'},
+                        {id:4,title:'解析'}
                     ]
                 },
                 {
@@ -173,9 +175,9 @@ export default {
                     className:'el-icon-zoom-in',
                     title:'资源搜索',
                     children:[
-                        {id:0,title:'网盘搜索',flag:true},
-                        {id:1,title:'BT搜索',flag:true},
-                        {id:2,title:'磁力软件',flag:true}
+                        {id:0,title:'网盘搜索'},
+                        {id:1,title:'BT搜索'},
+                        {id:2,title:'磁力软件'}
                     ]
                 },
                 {
@@ -183,11 +185,11 @@ export default {
                     className:'el-icon-s-platform',
                     title:'软件游戏',
                     children:[
-                        {id:0,title:'精品软件',flag:true},
-                        {id:1,title:'安卓',flag:false},
-                        {id:2,title:'苹果',flag:false},
-                        {id:3,title:'游戏',flag:false},
-                        {id:4,title:'浏览器类',flag:true}
+                        {id:0,title:'精品软件'},
+                        {id:1,title:'安卓'},
+                        {id:2,title:'苹果'},
+                        {id:3,title:'游戏'},
+                        {id:4,title:'浏览器'}
                     ]
                 },
                 {
@@ -195,8 +197,8 @@ export default {
                     className:'el-icon-s-order',
                     title:'阅读漫画',
                     children:[
-                        {id:0,title:'阅读小说',flag:true},
-                        {id:1,title:'免费漫画',flag:true}
+                        {id:0,title:'阅读小说'},
+                        {id:1,title:'免费漫画'}
                     ]
                 },
                 {
@@ -204,9 +206,9 @@ export default {
                     className:'fa fa-music',
                     title:'音乐动听',
                     children:[
-                        {id:0,title:'在线音乐',flag:true},
-                        {id:1,title:'无损音乐',flag:true},
-                        {id:2,title:'音乐软件',flag:true}
+                        {id:0,title:'在线音乐'},
+                        {id:1,title:'无损音乐'},
+                        {id:2,title:'音乐软件'}
                     ]
                 },
                 {
@@ -214,10 +216,10 @@ export default {
                     className:'fa fa-wrench',
                     title:'实用工具',
                     children:[
-                        {id:0,title:'综合工具',flag:true},
-                        {id:1,title:'小功能类',flag:true},
-                        {id:2,title:'文件处理',flag:true},
-                        {id:3,title:'图片处理',flag:true}
+                        {id:0,title:'综合工具'},
+                        {id:1,title:'功能类'},
+                        {id:2,title:'文件处理'},
+                        {id:3,title:'图片处理'}
                     ]
                 },
                 {
@@ -225,8 +227,8 @@ export default {
                     className:'el-icon-edit',
                     title:'学习教育',
                     children:[
-                        {id:0,title:'好好学习',flag:true},
-                        {id:1,title:'文档学术',flag:true}
+                        {id:0,title:'学习网站'},
+                        {id:1,title:'文档学术'}
                     ]
                 },
                 {
@@ -234,24 +236,24 @@ export default {
                     className:'el-icon-s-cooperation',
                     title:'办公素材',
                     children:[
-                        {id:0,title:'PPT',flag:false},
-                        {id:1,title:'图库',flag:false},
-                        {id:2,title:'壁纸',flag:false},
-                        {id:3,title:'图标',flag:false},
-                        {id:4,title:'字体',flag:false},
-                        {id:5,title:'配色',flag:false}
+                        {id:0,title:'PPT'},
+                        {id:1,title:'图库'},
+                        {id:2,title:'壁纸'},
+                        {id:3,title:'图标'},
+                        {id:4,title:'字体'},
+                        {id:5,title:'配色'}
                     ]
                 },
             ],
             asideBottom:[//左侧导航数据2
                 {id:0,className:'el-icon-warning-outline',title:'关于本站'}
             ],
-            routerList:[
+            routerList:[//路由导航
                 {router:'/link',className:'#icon-home',name:'主页'},
                 {router:'/link',className:'#icon-link',name:'友情链接'},
             ],
             weatherList:[],//最近三天天气数据
-            now:{
+            now:{//当天天气信息
                 city:'',//当前城市
                 wendu:'',//当天平均温度
                 type:'',//当天天气状态
@@ -260,7 +262,7 @@ export default {
                 'https://s1.ax1x.com/2020/10/08/00iVJO.jpg'
             ],
             isFold: true,//切换模式 折叠or打开
-            flag:false,//切换模式 日间or夜间
+            flag:true,//切换模式 日间or夜间
             showWeather:false,//切换天气模式 显示or隐藏
             drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
         }
@@ -316,7 +318,7 @@ export default {
         },
         //根据城市获取城市天气
         async getWeather(location){
-            const {data:res} = await this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
+            const {data:res} = await this.$axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
             if(res.status !== 1000) 
             return this.$message.error('获取天气数据失败')
             const value = res.data.forecast.slice(0,3)
@@ -366,6 +368,7 @@ export default {
         width: 100vw;
         position: fixed;
         background-color: rgba(0,0,0, .5);
+        border: 1px solid #fff;
         z-index: 998;
     }
     >section{
