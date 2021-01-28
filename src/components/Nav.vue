@@ -6,30 +6,27 @@
         <aside :class="flag?'switchColor enterAside':''">
             <div class="logo">
                 <img src="../assets/logo.jpg">
-                <transition name="logo">
-                    <span v-show="!isCollapse">LinnCooper</span>
-                </transition>
+                <transition name="logo"><span v-show="!isFold">LinnCooper</span></transition>
             </div>
 
-            <el-menu :class="flag?'one switchColor':'one'" :collapse="isCollapse" :unique-opened="true">
-                <el-submenu v-for="item in asideTop" :key="item.id" :index="item.id">
+            <el-menu :class="flag?'one switchColor':'one'" :collapse="isFold" :unique-opened="true">
+                <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
                     <template slot="title">
-                        <i :class="item.className" :style="{'margin':item.id == 5 
-                            || item.id == 6 ? '0 10px 0 5px': ''}"></i>
-                        <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{item.title}}</span>
+                        <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
+                        <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
                     </template>
                     <el-menu-item-group :class="flag?'switchColor enterAside':''">
-                        <span slot="title">{{item.title}}</span>
-                        <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
-                            @click="location(item.id,i.id)" :style="{'color':flag?'#fff':'#000'}">
-                        {{i.title}}</el-menu-item>
+                        <span slot="title">{{father.title}}</span>
+                        <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
+                            @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
+                        </el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
 
-            <el-menu :class="flag?'two switchColor':'two'" :collapse="isCollapse">
-                <el-menu-item v-for="item in asideBottom" :key="item.id" :index="item.id" 
-                    :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
+            <el-menu :class="flag?'two switchColor':'two'" :collapse="isFold">
+                <el-menu-item v-for="(item,id) in asideBottom" :key="id" :index="id" 
+                    :style="{'color':flag?'#fff':'#000'}">
                     <i :class="item.className"></i>
                     <span slot="title">{{item.title}}</span>
                 </el-menu-item>
@@ -37,40 +34,36 @@
         </aside>
 
         <!-- 蒙版 -->
-        <transition name="mengban">
-            <div class="mengban" v-show="drawer" @click="drawer = !drawer"></div>
+        <transition name="mask">
+            <div class="mask" v-show="drawer" @click="drawer = !drawer"></div>
         </transition>
 
         <!-- 移动端状态下的导航抽屉 -->
         <transition name="drawer">
             <div class="drawer" v-show="drawer">
-                <!-- logo图标 -->
                 <div class="logo">
                     <img src="../assets/logo.jpg">
-                    <transition name="logo">
-                        <span>LinnCooper</span>
-                    </transition>
+                    <transition name="logo"><span>LinnCooper</span></transition>
                 </div>
 
                 <el-menu :class="flag?'one switchColor':'one'" :unique-opened="true">
-                    <el-submenu v-for="item in asideTop" :key="item.id" :index="item.id">
+                    <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
                         <template slot="title">
-                            <i :class="item.className" :style="{'margin':item.id == 5 
-                                || item.id == 6 ? '0 10px 0 5px': ''}"></i>
-                            <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{item.title}}</span>
+                            <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
+                            <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
                         </template>
                         <el-menu-item-group :class="flag?'switchColor enterAside':''">
-                            <span slot="title">{{item.title}}</span>
-                            <el-menu-item v-for="i in item.children" :key="i.id" :index="`${item.id}-${i.id}`" 
-                                @click="location(item.id,i.id)" :style="{'color':flag?'#fff':'#000'}">
-                            {{i.title}}</el-menu-item>
+                            <span slot="title">{{father.title}}</span>
+                            <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
+                                @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
+                            </el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
 
                 <el-menu :class="flag?'two switchColor':'two'">
-                    <el-menu-item v-for="item in asideBottom" :key="item.id" :index="item.id" 
-                        :style="{'color':flag?'#fff':'#000'}" @click="openWebsite(item.url)">
+                    <el-menu-item v-for="(item,id) in asideBottom" :key="id" :index="id" 
+                        :style="{'color':flag?'#fff':'#000'}">
                         <i :class="item.className"></i>
                         <span slot="title">{{item.title}}</span>
                     </el-menu-item>
@@ -78,32 +71,24 @@
             </div>
         </transition>
 
-        <section :style="{'padding-left':isCollapse ?'64px':'200px'}">
+        <section :style="{'padding-left':isFold ?'64px':'200px'}">
             <header :class="flag?'black':'white'">
                 <div class="computer">
                     <img src="../assets/logo.jpg">
                     <svg class="icon" aria-hidden="true" 
-                        @click="hideCollapse" v-show="hide">
+                        @click="isFold = true" v-show="!isFold">
                         <use xlink:href="#icon-fold"></use>
                     </svg>
                     <svg class="icon" aria-hidden="true" 
-                        @click="showCollapse" v-show="show">
+                        @click="isFold = false" v-show="isFold">
                         <use xlink:href="#icon-open"></use>
                     </svg>
-                    <nav><li>
-                            <router-link to="/link" style="color:#2468F2;">
+                    <nav><li v-for="(item,id) in routerList" :key="id">
+                            <router-link :to="item.router" :style="{'color':id == 0 ? '#2468F2' : ''}">
                                 <svg class="icon-mini" aria-hidden="true">
-                                    <use xlink:href="#icon-home"></use>
+                                    <use :xlink:href="item.className"></use>
                                 </svg>
-                                <span>主页</span>
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link to="/link">
-                                <svg class="icon-mini" aria-hidden="true">
-                                    <use xlink:href="#icon-link"></use>
-                                </svg>
-                                <span>友情链接</span>
+                                <span>{{item.name}}</span>
                             </router-link>
                         </li>
                     </nav>
@@ -119,13 +104,12 @@
 
         <div class="weatherBox">
             <div class="weather">
-                <!-- <i :class="flag?'el-icon-heavy-rain backtopBlack':'el-icon-heavy-rain backtopWhite'"  -->
                 <i :class="className" 
                     @mouseenter="showWeather = true" @mouseleave="showWeather = false"></i>
                 <div v-show="showWeather" @mouseenter="showWeather = true" 
                     @mouseleave="showWeather = false">
-                    <header><label>{{city}}</label><span>简约天气</span></header>
-                    <main><span>{{wendu}}</span><span>{{type}}</span>
+                    <header><label>{{now.city}}</label><span>简约天气</span></header>
+                    <main><span>{{now.wendu}}</span><span>{{now.type}}</span>
                     </main>
                     <footer>
                         <table>
@@ -141,13 +125,13 @@
             </div>
 
             <div class="toggleMode">
-                <el-tooltip effect="dark" content="日间模式" placement="left">
+                <el-tooltip effect="dark" content="当前日间模式" placement="left">
                     <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
-                    v-show="sunny" @click="switchMoon"></i>
+                    v-show="!flag" @click="flag = true"></i>
                 </el-tooltip>
-                <el-tooltip effect="dark" content="夜间模式" placement="left">
+                <el-tooltip effect="dark" content="当前夜间模式" placement="left">
                     <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
-                    v-show="moon" @click="switchSunny"></i>
+                    v-show="flag" @click="flag = false"></i>
                 </el-tooltip>
             </div>
         </div>
@@ -262,25 +246,30 @@ export default {
             asideBottom:[//左侧导航数据2
                 {id:0,className:'el-icon-warning-outline',title:'关于本站'}
             ],
-            city:'',//当前城市
+            routerList:[
+                {router:'/link',className:'#icon-home',name:'主页'},
+                {router:'/link',className:'#icon-link',name:'友情链接'},
+            ],
             weatherList:[],//最近三天天气数据
-            wendu:'',//当天平均温度
-            type:'',//当天天气状态
-            isCollapse: true,//默认折叠
-            hide:false,//控制折叠
-            show:true,//控制展开
-            sunny:false,//控制切换到日间模式
-            moon:true,//控制切换到夜间模式
-            flag:false,//是否是日间模式
-            showWeather:false,//是否展示天气
-            drawer:false
+            now:{
+                city:'',//当前城市
+                wendu:'',//当天平均温度
+                type:'',//当天天气状态
+            },
+            imageList:[//预加载图片数据
+                'https://s1.ax1x.com/2020/10/08/00iVJO.jpg'
+            ],
+            isFold: true,//切换模式 折叠or打开
+            flag:false,//切换模式 日间or夜间
+            showWeather:false,//切换天气模式 显示or隐藏
+            drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
         }
     },
     computed:{
         className(){
             let className = ''
             if(!this.flag){
-                if(this.type == '晴'){
+                if(this.now.type == '晴'){
                     className = 'el-icon-sunny ' + 'backtopWhite'
                 }else if(this.type == '多云'){
                     className = 'el-icon-cloudy ' + 'backtopWhite'
@@ -288,7 +277,7 @@ export default {
                     className = 'el-icon-heavy-rain ' + 'backtopWhite'
                 }
             }else{
-                if(this.type == '晴'){
+                if(this.now.type == '晴'){
                     className = 'el-icon-sunny ' + 'backtopBlack'
                 }else if(this.type == '多云'){
                     className = 'el-icon-cloudy ' + 'backtopBlack'
@@ -302,19 +291,16 @@ export default {
     created() {
         this.getLoactionCity()
         document.oncontextmenu =  () => {event.returnValue = false}
+        this.preLoadImg(this.imageList)
     },
     methods: {
-        //展开
-        showCollapse(){
-            this.isCollapse = false
-            this.show = false
-            this.hide = true
-        },
-        //折叠
-        hideCollapse(){
-            this.isCollapse = true
-            this.show = true
-            this.hide = false
+        // 预加载图片
+        preLoadImg(arr){
+            let imgList = []
+            arr.forEach((item,index) => {
+                imgList[index] = new Image()
+                imgList[index].src = arr[index]
+            })
         },
         //锚点跳转
         location(fId,sId){
@@ -322,26 +308,10 @@ export default {
             window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
             this.$refs.Link.clickNavs(fId,sId)
         },
-        //打开个人链接
-        openWebsite(url){
-            window.open(url)
-        },
-        //切换到日间模式
-        switchSunny(){
-            this.moon = false
-            this.sunny = true
-            this.flag = true
-        },
-        //切换到夜间模式
-        switchMoon(){
-            this.moon = true
-            this.sunny = false
-            this.flag = false
-        },
         //获取当前地址,使用jsonp解决跨域问题 (get请求)
         async getLoactionCity(){
             const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
-            this.city = data.city
+            this.now.city = data.city
             this.getWeather(data.city)
         },
         //根据城市获取城市天气
@@ -350,10 +320,10 @@ export default {
             if(res.status !== 1000) 
             return this.$message.error('获取天气数据失败')
             const value = res.data.forecast.slice(0,3)
-            this.handleWeatherData(value)
+            this.dealWeather(value)
         },
         //处理天气数据
-        handleWeatherData(value){
+        dealWeather(value){
             value.map( (item,index) => {
                 if(index == 0){item.date = '今天';}
                 else if(index == 1){item.date = '明天';}
@@ -363,8 +333,8 @@ export default {
             this.weatherList = value
             let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
             let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-            this.wendu = (high + low) / 2 + '℃'
-            this.type = value[0].type
+            this.now.wendu = (high + low) / 2 + '℃'
+            this.now.type = value[0].type
         }
     }
 }
@@ -391,7 +361,7 @@ export default {
         display: flex;
         flex-direction: column;
     }
-    .mengban{
+    .mask{
         height: 100vh;
         width: 100vw;
         position: fixed;
@@ -400,15 +370,15 @@ export default {
     }
     >section{
         width: 100vw;
-        transition: all .5s;
+        transition: all .4s;
         box-sizing: border-box;
     }
     .weatherBox{
         position: fixed;
-        top: 88vh;
+        height: 100px;
+        bottom: 10px;
         right: 25px;
         box-sizing: border-box;
-        height: 100vh;
         display: flex;
         flex-direction: column;
         z-index: 999;
@@ -501,10 +471,6 @@ export default {
         box-shadow: 0 2px 10px 0 rgba(0,0,0,0.12);
         transition: color .25s;
     }
-    .toggleMode{
-        i:first-child:hover{color: #fff!important;}
-        i:last-child:hover{color: #000!important;}
-    }
     .weather{
         position: relative;
         >div{
@@ -561,14 +527,12 @@ export default {
     color: #777;
     font-size: 14px;
     right: 25px!important;
-    bottom: 12vh!important;
+    bottom: 112px!important;
     width: 40px;
     height: 40px;
     i{padding: 14px 15px;border-radius: 50%;}
 }
-header.black{
-    a{color: #fff!important;}
-}
+header.black{a{color: #fff!important;}}
 .black::before{
     content: '';
     backdrop-filter: blur(5px);
@@ -594,7 +558,6 @@ header.black{
     background-attachment: fixed;
 }
 
-
 @keyframes drawerShow{from{left: -200px;}to{left: 0;}}
 @keyframes drawerHide{from{left: 0;}to{left: -200px;}}
 .switchColor{background-color: #2C2E2F!important;}
@@ -611,7 +574,7 @@ header.black{
 }
 .drawer-enter-active{transition: all 1s;}
 .drawer-leave-active{transition: all 0.4s;}
-.mengban-enter,.mengban-leave-to{opacity: 0;}
+.mask-enter,.mask-leave-to{opacity: 0;}
 .drawer-enter-active{transition: all 1s;}
 .drawer-leave-active{transition: all 0.4s;}
 

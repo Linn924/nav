@@ -1,5 +1,5 @@
 <template>
-    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#f9f9f9'}">
+    <div id="link" :style="{'backgroundColor': flag ? '#1B1D1F' : '#f9f9f9'}">
 
         <header>
             <nav id="navTop">
@@ -17,11 +17,11 @@
                 <button @click="search"><i class="el-icon-search"></i></button>
             </div>
 
-            <nav id="navBottom" v-for="(item,index) in navBottom" :key="index" 
-                v-show="index == searchIndex">
-                <li v-for="i in item.children" :key="i.id" 
-                    :class="i.id == 0 ? 'currentLi':''" @click="switchLi(i.id,i.path)">
-                    {{i.title}}
+            <nav id="navBottom" v-for="(father,fId) in navBottom" :key="fId" 
+                v-show="fId == searchIndex">
+                <li v-for="(son,sId) in father.children" :key="sId" 
+                    :class="son.id == 0 ? 'currentLi':''" @click="switchLi(son.id,son.path)">
+                    {{son.title}}
                 </li>
             </nav>
         </header>
@@ -119,8 +119,8 @@ export default {
                 
             ],
             searchIndex:0,//当前指向navTop的下标
-            value:'百度',//初始搜索框中的内容
-            searchValue:'',//输入的内容
+            value:'百度',//搜索框中的提示信息
+            searchValue:'',//用户输入的内容
             searchUrl:'https://www.baidu.com/s?wd=',//初始搜索框的地址值
             isClick:false,//是否点击蓝色背景导航
             blueBgIndex:[],//记录蓝色背景的位置，默认都为1
@@ -153,13 +153,13 @@ export default {
             this.blueBgPosition = Array.from({length:number},() => 3)
             this.clickIndex = Array.from({length:number},() => ({index:1}))
         },
-        //点击切换ulTwo的值
+        //点击切换navTop的值
         switchUl(index){
             var lis = document.querySelectorAll('#navTop>li')
             var uls = document.querySelectorAll('#navBottom')
             var line = document.querySelector('.line')
             this.removeClass(lis,index)
-            line.style.marginLeft = -273 + 136*index + 'px'
+            line.style.marginLeft = -273 + 136 * index + 'px'
             this.searchIndex = index
             this.value = uls[index].children[0].innerHTML
             this.navBottom.some( (item,i) => {
@@ -170,7 +170,7 @@ export default {
             })
             this.$refs.search.focus()
         },
-        //点击切换ulTwo的li
+        //点击切换navGBottom的li
         switchLi(index,path){
             var lis = document.querySelectorAll('#navBottom')[this.searchIndex].children
             this.removeClass(lis,index)
@@ -273,9 +273,7 @@ export default {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center; 
-                p{
-                    margin-bottom: 5px;
-                }  
+                p{margin-bottom: 5px;}  
             }
         }
     }
@@ -331,8 +329,7 @@ export default {
             i{color: #fff;font-size: 20px;}
             &:focus{outline: none;}
         }
-    }
-    
+    }  
 }
 
 section{
@@ -441,10 +438,10 @@ section{
 }
 
 .currentLi{color: #fff!important;}
-.upWhite{animation: upWhite .25s linear forwards;} 
-.downWhite{animation: downWhite .25s linear forwards;} 
-.upBlack{animation: upBlack .25s linear forwards;} 
-.downBlack{animation: downBlack .25s linear forwards;} 
+.upWhite{animation: upWhite .15s linear forwards;} 
+.downWhite{animation: downWhite .15s linear forwards;} 
+.upBlack{animation: upBlack .15s linear forwards;} 
+.downBlack{animation: downBlack .15s linear forwards;} 
 .liWhite{
     box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede!important;
     background-color: #fff!important;
