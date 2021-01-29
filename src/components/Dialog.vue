@@ -2,7 +2,7 @@
     <transition name="dialog">
         <div class="dialog" :style="maskStyle" v-show="isVisible">
             <div class="dialog-container" :style="containerStyle">
-                <span class="dialog-title" :style="titleStyle">{{title}}</span>
+                <span class="dialog-title" :style="titleStyle" v-if="title">{{title}}</span>
                 <slot></slot>
                 <div class="dialog-button">
                     <button @click="confirm">{{confirmTxt}}</button>
@@ -18,7 +18,7 @@ export default {
     props:{
         title:{
             type:String,
-            default:'标题'
+            default:''
         },
         flag:{
             type:Boolean,
@@ -117,7 +117,7 @@ export default {
         align-items: center;
         box-sizing: border-box;
         padding: 20px 0;
-        border-radius: 5px;
+        border-radius: 4px;
         .dialog-title{font-size: 16px;}
         .dialog-button{
             display: flex;

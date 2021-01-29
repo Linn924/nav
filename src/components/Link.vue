@@ -1,178 +1,137 @@
 <template>
-    <div id="link" :style="{'backgroundColor': flag ? '#1B1D1F' : '#f9f9f9'}">
+    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#f9f9f9'}">
+        <Search></Search>
 
-        <header>
-            <nav id="navTop">
-                <li v-for="item in navTop" :key="item.id" 
-                    :class="item.id == 0 ? 'currentLi':''" @click="switchUl(item.id)">
-                    {{item.title}}
-                </li>
-            </nav>
+        <section>
+            <div class="item" v-for="(father,fId) in navList" :key="fId">
+                <label>
+                    <i :class="father.className" :style="{'color':flag?'#888':'#555',
+                        'fontSize':fId == 5 || fId == 6 ?'18px':''}"></i>
+                    <span :style="{'color':flag?'#888':'#555'}">{{father.name}}</span>
+                </label>
 
-            <div class="line"></div>
-
-            <div class="search">
-                <input type="text" :placeholder="value" ref="search" 
-                    v-model="searchValue" @keyup.enter.native="search">
-                <button @click="search"><i class="el-icon-search"></i></button>
-            </div>
-
-            <nav id="navBottom" v-for="(father,fId) in navBottom" :key="fId" 
-                v-show="fId == searchIndex">
-                <li v-for="(son,sId) in father.children" :key="sId" 
-                    :class="son.id == 0 ? 'currentLi':''" @click="switchLi(son.id,son.path)">
-                    {{son.title}}
-                </li>
-            </nav>
-        </header>
-
-        <main>
-            <section>
-                <div class="item" v-for="(father,fId) in navList" :key="fId">
-                    <label>
-                        <i :class="father.className" :style="{'color':flag ? '#888' : '#555',
-                            'fontSize':fId == 5 || fId == 6 ? '18px' : ''}"></i>
-                        <span :style="{'color':flag ? '#888' : '#555'}">{{father.name}}</span>
-                    </label>
-
-                    <div><nav :style="{'backgroundColor':flag ? '#181A1C' : '#E0E0E0'}">
-                            <li class="back"></li>
-                            <li v-for="(son,sId) in father.one" :key="sId" 
-                                :class="sId == 0 ?'currentLi':''" @click="clickNavs(fId,sId)" 
-                                @mouseenter="enterNavs(fId,sId)" @mouseleave="leaveNavs(fId)">
-                                {{son.name}}
-                            </li>
-                        </nav><span>more+</span>
-                    </div>
-
-                    <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
-                        <li v-for="(grandson,grandsId) in son.children" :key="grandsId" title="右击编辑网站" 
-                            :class="flag?'liMoon':'liSunny'" @mouseenter="up(fId,sId,grandsId)" 
-                            @mouseleave="down(fId,sId,grandsId)"  @contextmenu.prevent="rightClickNavs(grandson)">
-                            <a :href="grandson.url" target="_blank">
-                                <img src="../assets/logo.jpg" alt="" v-show="true">
-                                <div>
-                                    <strong :style="{'color':flag ? '#C6C9CF' : '#282A2D'}">{{grandson.name}}</strong>
-                                    <span>{{grandson.title}}</span>
-                                </div>
-                            </a>
-                            <div class="editNavs" v-show="false">
-                                <i class="el-icon-setting" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
-                                <i class="el-icon-delete" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
-                            </div>
+                <div><nav :class="flag?'bgColorMoon':'bgColorSunny'">
+                        <li class="back"></li>
+                        <li v-for="(son,sId) in father.one" :key="sId" 
+                            :class="sId == 0 ?'currentLi':''" @click="clickNavs(fId,sId)" 
+                            @mouseenter="enterNavs(fId,sId)" @mouseleave="leaveNavs(fId)">
+                            {{son.name}}
                         </li>
-                        <li :class="flag?'liMoon':'liSunny'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
-                            <i class="el-icon-plus" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
-                        </li>
-                    </nav>
+                    </nav><span>more+</span>
                 </div>
-            </section>
 
-            <footer><section :style="{'color':flag ? '#C6C9CF' : '#282A2D'}">
-                    <p>© 2020 - 2021 Simon 版权所有</p><p>苏ICP备20023864号</p>
-                </section>
-            </footer>
-        </main>
+                <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
+                    <li v-for="(grandson,grandsId) in son.children" :key="grandsId" 
+                        :class="flag?'liMoon':'liSunny'" @mouseenter="up(fId,sId,grandsId)" 
+                        @mouseleave="down(fId,sId,grandsId)">
 
-        <Dialog title="添加自定义网站" cancelTxt="取消" confirmTxt="确认" :mask="true" :flag="flag"
-            :visible="visible" @cancel="visible = false" @confirm="postNavs">
+                        <a :href="grandson.url" target="_blank">
+                            <img src="../assets/logo.jpg" alt="" v-show="true">
+                            <div>
+                                <strong :class="flag?'colorMoon':'colorSunny'">{{grandson.name}}</strong>
+                                <span>{{grandson.title}}</span>
+                            </div>
+                        </a>
+
+                        <div class="icon">
+                            <i class="el-icon-caret-left" v-show="clickLiIndex !== grandson.id" 
+                                @click="clickLiIndex = grandson.id"></i>
+                            <i class="el-icon-caret-right" v-show="clickLiIndex === grandson.id" 
+                                @click="clickLiIndex = 0"></i>
+                        </div>
+
+                        <div class="editNavs" v-show="clickLiIndex === grandson.id">
+                            <i class="el-icon-setting" :class="flag?'colorMoon':'colorSunny'" 
+                                @click="clickEditBtn(grandson)"></i>
+                            <i class="el-icon-delete" :class="flag?'colorMoon':'colorSunny'" 
+                                @click="clickDeleteBtn(grandson.id)"></i>
+                        </div>
+
+                    </li>
+                    <li :class="flag?'liMoon':'liSunny'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
+                        <i class="el-icon-plus" :class="flag?'colorMoon':'colorSunny'"></i>
+                    </li>
+                </nav>
+            </div>
+        </section>
+
+        <Footer :flag="flag"></Footer>
+
+        <Dialog title="添加自定义网站" cancelTxt="取消" confirmTxt="添加" 
+            :mask="true" :flag="flag" :visible="postDialogVisible" 
+            @cancel="postDialogVisible = false" @confirm="postNavs">
             <div class="dialog-forms">
-                <input type="text" placeholder="网站名称" v-model="postNavsForm.name" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
-                <input type="text" v-model="postNavsForm.url" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
-                <textarea placeholder="描述点什么吧！" v-model="postNavsForm.title" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}"></textarea>
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    placeholder="网站名称" v-model="postNavsForm.name">
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    v-model="postNavsForm.url">
+                <textarea :class="flag?'bgColorMoon':'bgColorSunny'" placeholder="描述点什么吧！" 
+                    v-model="postNavsForm.title"></textarea>
             </div>
         </Dialog>
 
+        <Dialog title="修改自定义网站" cancelTxt="取消" confirmTxt="修改" 
+            :mask="true" :flag="flag" :visible="putDialogVisible" 
+            @cancel="cancelPutNavs" @confirm="putNavs">
+            <div class="dialog-forms">
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    placeholder="网站名称" v-model="putNavsForm.name">
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    v-model="putNavsForm.url">
+                <textarea :class="flag?'bgColorMoon':'bgColorSunny'" placeholder="描述点什么吧！" 
+                    v-model="putNavsForm.title"></textarea>
+            </div>
+        </Dialog>
+
+        <Dialog cancelTxt="取消" confirmTxt="删除" width="200px" height="70px"
+            :mask="true" :flag="flag" :visible="deleteDialogVisible" 
+            @cancel="cancelDeleteNavs" @confirm="deleteNavs">
+        </Dialog>
 
     </div>
 </template>
 
 <script>
 import Dialog from './Dialog'
+import Search from './Search'
+import Footer from './Footer'
 export default {
     inject:['reload'],
     props:['flag'],
     components:{
-        Dialog
+        Dialog,
+        Search,
+        Footer
     },
     data(){
         return {
-            navTop:[
-                {id:0,title:'搜索'},
-                {id:1,title:'网盘'},
-                {id:2,title:'软件'},
-                {id:3,title:'书籍'},
-                {id:4,title:'菜谱'}
-            ],
-            navBottom:[
-                {
-                    children:[
-                        {id:0,title:'百度',path:'https://www.baidu.com/s?wd='},
-                        {id:1,title:'Google',path:'http://www.google.com/search?q='},
-                        {id:2,title:'秘迹',path:'https://www.mijisou.com/?q='},
-                        {id:3,title:'多吉',path:'https://www.dogedoge.com/results?q='},
-                        {id:4,title:'Magi',path:'https://magi.com/search?q='},
-                        {id:5,title:'Bing',path:'https://cn.bing.com/search?q='}
-                    ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'云盘精灵',path:'https://www.yunpanjingling.com/search/'},
-                        {id:1,title:'大力盘',path:'https://www.dalipan.com/search?keyword='},
-                        {id:2,title:'如风搜',path:'http://www.rufengso.net/s/name/'},
-                        {id:3,title:'小可搜搜',path:'https://www.xiaokesoso.com/s/search?q='},
-                        {id:4,title:'小昭来了',path:'https://www.xiaozhaolaila.com/s/search?q='},
-                        {id:5,title:'史莱姆',path:'http://www.slimego.cn/search.html?q='}
-                    ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'胡萝卜周',path:'http://www.carrotchou.blog/?s='},
-                        {id:1,title:'ZD423',path:'https://www.zdfans.com/search.asp?keyword='},
-                        {id:2,title:'机锋论坛',path:'http://bbs.gfan.com/search?q='},
-                        {id:3,title:'果壳剥壳',path:'https://www.ghpym.com/?s='}
-                    ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'i-BOOK',path:'https://book.tstrs.me/find?q='},
-                        {id:1,title:'熊猫搜书',path:'https://ebook.huzerui.com/#/result?keyword='},
-                        {id:2,title:'LoreFree',path:'https://ebook2.lorefree.com/site/index?s='},
-                        {id:3,title:'SoBook',path:'https://sobooks.cc/search/'}
-                    ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'下厨房',path:'http://www.xiachufang.com/search/?keyword='},
-                        {id:1,title:'香哈菜谱',path:'https://www.xiangha.com/so/?q=caipu&s='}
-                    ]    
-                },
-                
-            ],
-            searchIndex:0,//当前指向navTop的下标
-            value:'百度',//搜索框中的提示信息
-            searchValue:'',//用户输入的内容
-            searchUrl:'https://www.baidu.com/s?wd=',//初始搜索框的地址值
             isClick:false,//是否点击蓝色背景导航
             blueBgIndex:[],//记录蓝色背景的位置，默认都为1
             blueBgPosition:[],//记录蓝色背景距离左边的距离，默认都为3
             clickIndex:[],//记录点击的导航的下标以及设置蓝色背景的宽度与下标为0的导航宽度相同，默认分别都为0,1
             navList:[],//所有导航数据
-            postNavsForm:{
+            postNavsForm:{//自定义导航添加表单
                 parentsId:Number,
                 brothersId:Number,
                 name:'',
                 title:'',
                 url:'https://'
             },
-            visible:false,//对话框的样式 显示or隐藏
+            putNavsForm:{//自定义导航修改表单
+                id:Number,
+                name:'',
+                title:'',
+                url:''
+            },
+            postDialogVisible:false,//添加自定义网站对话框 显示or隐藏
+            putDialogVisible:false,//修改自定义网站对话框 显示or隐藏
+            deleteDialogVisible:false,//删除自定义网站对话框 显示or隐藏
+            clickLiIndex:0,//右键点击的导航网站
+            deleteLiIndex:0,//即将删除的导航网站下标
         }
     },
     created() {
         this.getNavs()
-    },
-    mounted() {
-        this.$refs.search.focus()
     },
     updated(){
         for(let i = 0; i < this.navList.length; i++){this.leaveNavs(i)}
@@ -191,38 +150,6 @@ export default {
             this.blueBgIndex = Array.from({length:number},() => 1)
             this.blueBgPosition = Array.from({length:number},() => 3)
             this.clickIndex = Array.from({length:number},() => ({cIndex:0,bIndex:1}))
-        },
-        //点击切换navTop的值
-        switchUl(index){
-            var lis = document.querySelectorAll('#navTop>li')
-            var uls = document.querySelectorAll('#navBottom')
-            var line = document.querySelector('.line')
-            this.removeClass(lis,index)
-            line.style.marginLeft = -273 + 136 * index + 'px'
-            this.searchIndex = index
-            this.value = uls[index].children[0].innerHTML
-            this.navBottom.some( (item,i) => {
-                if(i == index){
-                    this.switchLi(0,item.children[0].path)//重置回最初始的状态
-                    return true
-                }
-            })
-            this.$refs.search.focus()
-        },
-        //点击切换navGBottom的li
-        switchLi(index,path){
-            var lis = document.querySelectorAll('#navBottom')[this.searchIndex].children
-            this.removeClass(lis,index)
-            this.value = lis[index].innerHTML
-            this.searchUrl = path
-            this.$refs.search.focus()
-        },
-        //搜索
-        search(){
-            if((this.searchValue.trim()) == '') 
-            return this.$message({type:'error',duration:1000,message:'请输入内容'})
-            window.open(this.searchUrl + this.searchValue)
-            this.searchValue = ''
         },
         //鼠标移入导航
         enterNavs(fId,sId){
@@ -280,22 +207,55 @@ export default {
                 li.classList.add('downMoon')
             }
         },
-        //右击导航
-        rightClickNavs(navs){
-            console.log(navs)
-        },
         //点击添加自定义网站方块
         clickAddBtn(fId,sId){
             this.postNavsForm.parentsId = fId
             this.postNavsForm.brothersId = sId
-            this.visible = true
+            this.postDialogVisible = true
         },
         //添加自定义网站
         async postNavs(){
             const {data:res} = await this.$axios.post('navs',this.postNavsForm)
             if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
             this.$message({message:`${res.tips}`,type:'success',duration:1000})
-            this.visible = false
+            this.postDialogVisible = false
+            this.reload()
+        },
+        clickEditBtn(navs){
+            this.putNavsForm.id = navs.id
+            this.putNavsForm.name = navs.name
+            this.putNavsForm.title = navs.title
+            this.putNavsForm.url = navs.url
+            this.putDialogVisible = true
+        },
+        //取消修改自定义网站
+        cancelPutNavs(){
+            this.putDialogVisible = false
+            this.clickLiIndex = 0
+        },
+        //修改自定义网站
+        async putNavs(){
+            const {data:res} = await this.$axios.put('navs',this.putNavsForm)
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
+            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            this.putDialogVisible = false
+            this.reload()
+        },
+        clickDeleteBtn(id){
+            this.deleteLiIndex = id
+            this.deleteDialogVisible = true
+        },
+        //取消删除自定义网站
+        cancelDeleteNavs(){
+            this.deleteDialogVisible = false
+            this.clickLiIndex = 0
+        },
+        //删除自定义网站
+        async deleteNavs(){
+            const {data:res} = await this.$axios.delete('navs',{params:{id:this.deleteLiIndex}})
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
+            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            this.deleteDialogVisible = false
             this.reload()
         }
     }
@@ -307,85 +267,10 @@ export default {
     width: 100%;
     min-height: 100vh;
     min-width: 375px;
-    >header{
-        height: 450px;
-        background-color: rgb(7,7,27);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    section{
+        width: 95%;
+        margin: 25px auto;
     }
-    >main{
-        >section{
-            width: 95%;
-            margin: 25px auto;
-        }
-        >footer{
-            width: 95%;
-            margin: 0 auto;
-            font-size: 12px;
-            section{
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center; 
-                p{margin-bottom: 5px;}  
-            }
-        }
-    }
-}
-
-#link>header{
-    nav{
-        list-style: none;
-        display: flex;
-        li{
-            margin-right: 40px;
-            color: #84848E;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color .4s;
-            &:hover{color: #fff;}
-            &:last-child{margin-right: 0;}
-        }
-    }
-    .line{
-        width: 32px;
-        height: 4px;
-        transition: all .4s;
-        margin-left: -273px;
-        border-radius: 2px;
-        background-color: #fff;
-    }
-    .search{
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
-        position: relative;
-        input{
-            width: 800px;
-            height: 50px;
-            border: 0;
-            border-radius: 25px;
-            background-color: #000;
-            color: #fff;
-            padding-left: 20px;
-            margin: 0 auto;
-            &:focus{outline: none;}
-            &::placeholder{font-size: 16px;}
-        }
-        button{
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            background-color: #000;
-            border: 0;
-            cursor: pointer;
-            i{color: #fff;font-size: 20px;}
-            &:focus{outline: none;}
-        }
-    }  
 }
 
 section{
@@ -454,38 +339,46 @@ section{
                 border-radius: 4px;
                 display: flex;
                 a{
-                    display: block;
                     flex: 1;
                     height: inherit;
-                    padding: 0 10px;
                     box-sizing: border-box;
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
+                    padding-left:5px;
+                    img{
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        margin-right: 10px;
+                    }
+                    div{
+                        flex: 1;
+                        height: inherit;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        font-size: 12px;
+                        box-sizing: border-box;
+                        width: 0;
+                        strong{
+                            margin-bottom: 5px;
+                            color:#000;
+                            transition: color .25s;
+                        }
+                        span{
+                            color: #6C757D;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
                 }
-                img{
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    margin-right: 10px;
-                }
-                div{
-                    width: 80%;
+                .icon{
+                    height: inherit;
                     display: flex;
-                    flex-direction: column;
-                    font-size: 12px;
-                    strong{
-                        margin-bottom: 5px;
-                        color:#000;
-                        transition: color .25s;
-                    }
-                    span{
-                        color: #6C757D;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
                 }
                 .editNavs{
                     width: 40px;
@@ -494,7 +387,11 @@ section{
                     flex-direction: column;
                     align-items: center;
                     justify-content: space-around;
-                    i{font-size: 22px;cursor: pointer;}
+                    i{
+                        font-size: 22px;
+                        cursor: pointer;
+                        &:hover{color: #2468F2!important;}
+                    }
                 }
                 &:hover{strong{color: #2468F2!important;}}
             }
@@ -540,19 +437,28 @@ section{
     }
 }
 
-.currentLi{color: #fff!important;}
 .upSunny{animation: upSunny .15s linear forwards;} 
 .downSunny{animation: downSunny .15s linear forwards;} 
 .upMoon{animation: upMoon .15s linear forwards;} 
 .downMoon{animation: downMoon .15s linear forwards;} 
+.currentLi{color: #fff!important;}
 .liSunny{
     box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede!important;
     background-color: #fff!important;
+    .icon>i{color: #E7E9EA!important;}
+    &:hover{.icon>i{color: #2c2e2f!important;}}
 }
 .liMoon{
     box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2)!important;
     background-color: #2c2e2f!important;
+    .icon>i{color: #343739!important;}
+    &:hover{.icon>i{color: #fff!important;}}
 }
+.colorSunny{color: #282A2D!important;}
+.colorMoon{color:#C6C9CF!important;}
+.bgColorSunny{background-color: #F1F3F6!important;}
+.bgColorMoon{background-color: #363738!important;}
+
 @keyframes upSunny {
   from{
       transform: translateY(0);
@@ -594,18 +500,6 @@ section{
   }                  
 }
 
-.dialog-enter-active,
-.dialog-leave-active,
-.mask-enter-active,
-.mask-leave-active
-{transition: all .15s;}
-
-.dialog-enter,
-.dialog-leave-to,
-.mask-enter,
-.mask-leave-to
-{opacity: 0;}
-
 @media screen and (min-width: 1920px) {
     section .item>nav li{
         margin: 0 30px 30px 0;
@@ -639,26 +533,12 @@ section{
         width: 32%;
         &:nth-child(3n){margin-right: 0;}
     }
-    .search input{
-        width: 600px!important;
-    }
 }
 @media screen and (max-width: 760px) {
     section .item>nav li{
         margin: 0 2% 30px 0;
         width: 48%;
         &:nth-child(2n){margin-right: 0;}
-    }
-    .search input{
-        width: 500px!important;
-    }
-}
-@media screen and (max-width: 600px) { 
-    header{
-        height: 7.5vh!important;
-    }
-    header nav,header .line,header .search{
-        display: none!important;
     }
 }
 </style>
