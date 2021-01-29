@@ -34,9 +34,9 @@
                         </a>
 
                         <div class="icon">
-                            <i class="el-icon-caret-left" v-show="clickLiIndex !== grandson.id" 
+                            <i class="fa fa-chevron-circle-left" v-show="clickLiIndex !== grandson.id" 
                                 @click="clickLiIndex = grandson.id"></i>
-                            <i class="el-icon-caret-right" v-show="clickLiIndex === grandson.id" 
+                            <i class="fa fa-chevron-circle-right" v-show="clickLiIndex === grandson.id" 
                                 @click="clickLiIndex = 0"></i>
                         </div>
 
@@ -308,7 +308,7 @@ section{
                     color: #888;
                     padding: 0 10px;
                     z-index: 2;
-                    transition: all .4s;
+                    transition: color .4s;
                 }
                 .back{
                     position: absolute;
@@ -338,6 +338,7 @@ section{
                 box-sizing: border-box;
                 border-radius: 4px;
                 display: flex;
+                padding-right: 5px;
                 a{
                     flex: 1;
                     height: inherit;
@@ -379,15 +380,17 @@ section{
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
+                    transition: color .25s;
                 }
                 .editNavs{
                     width: 40px;
                     height: inherit;
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
+                    align-items: flex-end;
                     justify-content: space-around;
                     i{
+                        transition: color .25s;
                         font-size: 22px;
                         cursor: pointer;
                         &:hover{color: #2468F2!important;}
@@ -434,6 +437,9 @@ section{
         font-size: 15px;
         color: #AAA;
         font-family: Helvetica;
+        &::-webkit-scrollbar {width: 3px;border-radius: 2px;}
+        &::-webkit-scrollbar-thumb {background-color: rgb(177, 175, 175);border-radius: 4px;}
+        &::-webkit-scrollbar-track{background-color: #bdbdbd;}
     }
 }
 

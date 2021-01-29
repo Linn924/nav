@@ -82,7 +82,10 @@ export default {
         },
         maskStyle(){
             let list = {}
-            if(this.mask) list['backgroundColor'] = 'rgba(0,0,0,.5)'
+            if(this.mask){
+                list['backgroundColor'] = 'rgba(0,0,0,.5)'
+                list['backdropFilter'] = 'blur(5px)'
+            }
             return list
         },
         titleStyle(){

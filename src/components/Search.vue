@@ -11,7 +11,7 @@
 
         <div class="search">
             <input type="text" :placeholder="value" ref="input" 
-                v-model="searchValue" @keyup.enter.native="search">
+                v-model="searchValue" @keyup.enter="search">
             <button @click="search"><i class="el-icon-search"></i></button>
         </div>
 

@@ -75,19 +75,10 @@
             <header :class="flag?'black':'white'">
                 <div class="computer">
                     <img src="../assets/logo.jpg">
-                    <svg class="icon" aria-hidden="true" 
-                        @click="isFold = true" v-show="!isFold">
-                        <use xlink:href="#icon-fold"></use>
-                    </svg>
-                    <svg class="icon" aria-hidden="true" 
-                        @click="isFold = false" v-show="isFold">
-                        <use xlink:href="#icon-open"></use>
-                    </svg>
+                    <i class="fa fa-bars" @click="isFold = false" v-show="isFold"></i>
+                    <i class="el-icon-s-data" @click="isFold = true" v-show="!isFold"></i>
                     <!-- <nav><li v-for="(item,id) in routerList" :key="id">
                             <router-link :to="item.router">
-                                <svg class="icon-mini" aria-hidden="true">
-                                    <use :xlink:href="item.className"></use>
-                                </svg>
                                 <span>{{item.name}}</span>
                             </router-link>
                         </li>
@@ -424,12 +415,14 @@ export default {
             display: flex;
             align-items: center;
             position: relative;
-            >.icon{
+            i{
                 color: #909399;
+                font-size: 24px;
                 transition: color .25s;
                 &:hover{color: #2468F2!important;}
                 margin: 0 20px 0 20px;
                 cursor: pointer;
+                &:last-child{transform: rotate(90deg);}
             }
             img{width: 50px;height: 50px;border-radius: 50%;display: none;}
             nav{
