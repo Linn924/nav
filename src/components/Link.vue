@@ -47,7 +47,7 @@
 
                     <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
                         <li v-for="(grandson,grandsId) in son.children" :key="grandsId" title="右击编辑网站" 
-                            :class="flag?'liBlack':'liWhite'" @mouseenter="up(fId,sId,grandsId)" 
+                            :class="flag?'liMoon':'liSunny'" @mouseenter="up(fId,sId,grandsId)" 
                             @mouseleave="down(fId,sId,grandsId)"  @contextmenu.prevent="rightClickNavs(grandson)">
                             <a :href="grandson.url" target="_blank">
                                 <img src="../assets/logo.jpg" alt="" v-show="true">
@@ -56,8 +56,12 @@
                                     <span>{{grandson.title}}</span>
                                 </div>
                             </a>
+                            <div class="editNavs" v-show="false">
+                                <i class="el-icon-setting" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
+                                <i class="el-icon-delete" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
+                            </div>
                         </li>
-                        <li :class="flag?'liBlack':'liWhite'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
+                        <li :class="flag?'liMoon':'liSunny'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
                             <i class="el-icon-plus" :style="{'color':flag ? '#C6C9CF' : '#282A2D'}"></i>
                         </li>
                     </nav>
@@ -70,26 +74,27 @@
             </footer>
         </main>
 
-        <transition name="dialog">
-            <div class="dialog" :style="{'backgroundColor':flag ? '#2C2E2F' : '#fff'}" v-show="visible">
-                <span :style="{'color':flag ? '#C6C9CF':'282A2D'}">添加自定义网站</span>
-                <input type="text" placeholder="网站名称" v-model="navsForm.name" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
-                <input type="text" v-model="navsForm.url" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
-                <textarea placeholder="描述点什么吧！" v-model="navsForm.title" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}"></textarea>
-                <div class="button">
-                    <button @click="postNavs">添加</button>
-                    <button @click="visible = false">取消</button>
-                </div>
+        <Dialog title="添加自定义网站" cancelTxt="取消" confirmTxt="确认" :mask="true" :flag="flag"
+            :visible="visible" @cancel="visible = false" @confirm="postNavs">
+            <div class="dialog-forms">
+                <input type="text" placeholder="网站名称" v-model="postNavsForm.name" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
+                <input type="text" v-model="postNavsForm.url" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}">
+                <textarea placeholder="描述点什么吧！" v-model="postNavsForm.title" :style="{'backgroundColor':flag ? '#363738' : '#F1F3F6'}"></textarea>
             </div>
-        </transition>
+        </Dialog>
+
 
     </div>
 </template>
 
 <script>
+import Dialog from './Dialog'
 export default {
     inject:['reload'],
     props:['flag'],
+    components:{
+        Dialog
+    },
     data(){
         return {
             navTop:[
@@ -153,7 +158,7 @@ export default {
             blueBgPosition:[],//记录蓝色背景距离左边的距离，默认都为3
             clickIndex:[],//记录点击的导航的下标以及设置蓝色背景的宽度与下标为0的导航宽度相同，默认分别都为0,1
             navList:[],//所有导航数据
-            navsForm:{
+            postNavsForm:{
                 parentsId:Number,
                 brothersId:Number,
                 name:'',
@@ -257,36 +262,37 @@ export default {
         up(fId,sId,grandsId){
             var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
             if(!this.flag){
-                li.classList.remove('downWhite')
-                li.classList.add('upWhite')
+                li.classList.remove('downSunny')
+                li.classList.add('upSunny')
             }else{
-                li.classList.remove('downBlack')
-                li.classList.add('upBlack')
+                li.classList.remove('downMoon')
+                li.classList.add('upMoon')
             }
         },
         //导航下降动画
         down(fId,sId,grandsId){
             var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
             if(!this.flag){
-                li.classList.remove('upWhite')
-                li.classList.add('downWhite')
+                li.classList.remove('upSunny')
+                li.classList.add('downSunny')
             }else{
-                li.classList.remove('upBlack')
-                li.classList.add('downBlack')
+                li.classList.remove('upMoon')
+                li.classList.add('downMoon')
             }
         },
         //右击导航
         rightClickNavs(navs){
             console.log(navs)
         },
+        //点击添加自定义网站方块
         clickAddBtn(fId,sId){
-            this.navsForm.parentsId = fId
-            this.navsForm.brothersId = sId
+            this.postNavsForm.parentsId = fId
+            this.postNavsForm.brothersId = sId
             this.visible = true
         },
         //添加自定义网站
         async postNavs(){
-            const {data:res} = await this.$axios.post('navs',this.navsForm)
+            const {data:res} = await this.$axios.post('navs',this.postNavsForm)
             if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
             this.$message({message:`${res.tips}`,type:'success',duration:1000})
             this.visible = false
@@ -326,23 +332,6 @@ export default {
                 p{margin-bottom: 5px;}  
             }
         }
-    }
-    .dialog{
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin:auto;
-        width: 500px;
-        height: 270px;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-sizing: border-box;
-        padding: 20px 0;
-        z-index: 999;
     }
 }
 
@@ -463,15 +452,17 @@ section{
                 height: 70px;
                 box-sizing: border-box;
                 border-radius: 4px;
+                display: flex;
                 a{
                     display: block;
-                    width: 100%;
-                    height: 100%;
-                    padding: 15px 15px;
+                    flex: 1;
+                    height: inherit;
+                    padding: 0 10px;
                     box-sizing: border-box;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    overflow: hidden;
                 }
                 img{
                     width: 40px;
@@ -496,6 +487,15 @@ section{
                         text-overflow: ellipsis;
                     }
                 }
+                .editNavs{
+                    width: 40px;
+                    height: inherit;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-around;
+                    i{font-size: 22px;cursor: pointer;}
+                }
                 &:hover{strong{color: #2468F2!important;}}
             }
             li:last-child{
@@ -509,7 +509,12 @@ section{
     }
 }
 
-.dialog{
+.dialog-forms{
+    width: inherit;
+    margin: 30px 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     input{
         width: 465px;
         height: 35px;
@@ -519,7 +524,7 @@ section{
         padding-left: 5px;
         font-size: 15px;
         color: #AAA;
-        &:nth-child(2){margin: 30px 0 10px 0;}
+        &:nth-child(2){margin: 10px 0;}
     }
     textarea{
         width: 465px;
@@ -531,48 +536,24 @@ section{
         padding-left: 5px;
         font-size: 15px;
         color: #AAA;
-        margin: 10px 0 20px 0;
         font-family: Helvetica;
-    }
-    .button{
-        display: flex;
-        justify-content: space-between;
-        width: 120px;
-    }
-    button{
-        padding: 8px 12px;
-        border: none;
-        outline: none;
-        border-radius: 2px;
-        cursor: pointer;
-        color: #fff;
-        &:first-child{
-            background-color: #2468F2;
-            transition: color .15s;
-            &:hover{background-color: #14171B;}
-        }
-        &:last-child{
-            background-color: #14171B;
-            transition: color .15s;
-            &:hover{background-color: #2468F2;}
-        }
     }
 }
 
 .currentLi{color: #fff!important;}
-.upWhite{animation: upWhite .15s linear forwards;} 
-.downWhite{animation: downWhite .15s linear forwards;} 
-.upBlack{animation: upBlack .15s linear forwards;} 
-.downBlack{animation: downBlack .15s linear forwards;} 
-.liWhite{
+.upSunny{animation: upSunny .15s linear forwards;} 
+.downSunny{animation: downSunny .15s linear forwards;} 
+.upMoon{animation: upMoon .15s linear forwards;} 
+.downMoon{animation: downMoon .15s linear forwards;} 
+.liSunny{
     box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede!important;
     background-color: #fff!important;
 }
-.liBlack{
+.liMoon{
     box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2)!important;
     background-color: #2c2e2f!important;
 }
-@keyframes upWhite {
+@keyframes upSunny {
   from{
       transform: translateY(0);
       box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
@@ -582,7 +563,7 @@ section{
       box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
   }                  
 }
-@keyframes downWhite {
+@keyframes downSunny {
   from{
       transform: translateY(-10px);
       box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
@@ -592,7 +573,7 @@ section{
       box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
   }                  
 }
-@keyframes upBlack {
+@keyframes upMoon {
   from{
       transform: translateY(0);
       box-shadow: 2px 2px 2px rgba(255,255,255, .12),-2px -2px 2px rgba(255,255,255, .12);
@@ -602,7 +583,7 @@ section{
       box-shadow: 6px 8px 12px rgba(255,255,255, .12),-6px 8px 12px rgba(255,255,255, .12);
   }                  
 }
-@keyframes downBlack {
+@keyframes downMoon {
   from{
       transform: translateY(-10px);
       box-shadow: 2px 2px 2px  rgba(255,255,255, .12),-2px -2px 2px  rgba(255,255,255, .12);

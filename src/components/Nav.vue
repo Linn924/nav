@@ -262,7 +262,7 @@ export default {
                 'https://s1.ax1x.com/2020/10/08/00iVJO.jpg'
             ],
             isFold: true,//切换模式 折叠or打开
-            flag:true,//切换模式 日间or夜间
+            flag:false,//切换模式 日间or夜间
             showWeather:false,//切换天气模式 显示or隐藏
             drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
         }
@@ -384,7 +384,6 @@ export default {
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        z-index: 999;
     }
 }
 
