@@ -25,19 +25,19 @@
             </el-menu>
 
             <el-menu :class="flag?'two switchColor':'two'" :collapse="isFold">
-                <el-menu-item v-for="(item,id) in asideBottom" :key="id" :index="id" 
-                    :style="{'color':flag?'#fff':'#000'}">
-                    <i :class="item.className"></i>
-                    <span slot="title">{{item.title}}</span>
+                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="0" @click="clickLoginBtn">
+                    <i class="el-icon-user-solid"></i>
+                    <span slot="title">登录</span>
+                </el-menu-item>
+                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="1">
+                    <i class="el-icon-warning-outline"></i>
+                    <span slot="title">关于本站</span>
                 </el-menu-item>
             </el-menu>
         </aside>
 
-        <transition name="mask">
-            <div class="mask" v-show="drawer" @click="drawer = !drawer"></div>
-        </transition>
+        <transition name="mask"><div class="mask" v-show="drawer" @click="drawer = !drawer"></div></transition>
 
-        <!-- 移动端状态下的导航抽屉 -->
         <transition name="drawer">
             <div class="drawer" v-show="drawer" :class="flag?'switchColor enterAside':''">
                 <div class="logo">
@@ -61,10 +61,9 @@
                 </el-menu>
 
                 <el-menu :class="flag?'two switchColor':'two'">
-                    <el-menu-item v-for="(item,id) in asideBottom" :key="id" :index="id" 
-                        :style="{'color':flag?'#fff':'#000'}">
-                        <i :class="item.className"></i>
-                        <span slot="title">{{item.title}}</span>
+                    <el-menu-item :style="{'color':flag?'#fff':'#000'}">
+                        <i class="eel-icon-warning-outline"></i>
+                        <span slot="title">关于本站</span>
                     </el-menu-item>
                 </el-menu>
             </div>
@@ -218,27 +217,43 @@ export default {
                     ]
                 },
             ],
-            asideBottom:[//左侧导航数据2
-                {id:0,className:'el-icon-warning-outline',title:'关于本站'}
-            ],
             routerList:[//路由导航
-                {router:'/link',className:'#icon-home',name:'主页'},
-                {router:'/link',className:'#icon-link',name:'友情链接'},
+                {router:'/nav',className:'#icon-home',name:'主页'},
+                {router:'/nav',className:'#icon-link',name:'友情链接'},
             ],
             isFold: true,//切换模式 折叠or打开
             flag:false,//切换模式 日间or夜间
             drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
+            imageList:[//预加载图片数据
+                'https://s3.ax1x.com/2021/01/31/yEVgQs.png',
+                'https://s3.ax1x.com/2021/01/31/yEVTW4.jpg',
+                'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg',
+                'https://s3.ax1x.com/2020/12/04/DqicSe.jpg'
+            ],
         }
     },
     created() {
         document.oncontextmenu =  () => {event.returnValue = false}
+        this.preLoadImg(this.imageList)
     },
     methods: {
+        // 预加载图片
+        preLoadImg(arr){
+            let imgList = []
+            arr.forEach((item,index) => {
+                imgList[index] = new Image()
+                imgList[index].src = arr[index]
+            })
+        },
         //锚点跳转
         location(fId,sId){
             var ul = document.querySelectorAll('.item>div nav')[fId]
             window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
             this.$refs.Link.clickNavs(fId,sId)
+        },
+        //跳转到登录界面
+        clickLoginBtn(){
+            this.$router.push('/login')
         }
     }
 }

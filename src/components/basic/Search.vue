@@ -127,7 +127,7 @@ export default {
         removeClass(dom,i){
             dom.forEach( item => item.classList.remove('currentLi'))
             dom[i].className = 'currentLi'
-        }
+        },
     }
 }
 </script>

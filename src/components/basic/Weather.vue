@@ -39,27 +39,13 @@ export default {
                 wendu:'',//当天平均温度
                 type:'',//当天天气状态
             },
-            imageList:[//预加载图片数据
-                'https://s3.ax1x.com/2021/01/31/yEVgQs.png',
-                'https://s3.ax1x.com/2021/01/31/yEVTW4.jpg',
-                'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg'
-            ],
             showWeather:false,//切换天气模式 显示or隐藏
         }
     },
     created(){
         this.getLoactionCity()
-        this.preLoadImg(this.imageList)
     },
     methods:{
-        // 预加载图片
-        preLoadImg(arr){
-            let imgList = []
-            arr.forEach((item,index) => {
-                imgList[index] = new Image()
-                imgList[index].src = arr[index]
-            })
-        },
         //获取当前城市名称
         async getLoactionCity(){
             const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')

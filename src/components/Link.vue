@@ -28,7 +28,7 @@
                         @mouseleave="down(fId,sId,grandsId)">
 
                         <a :href="grandson.url" target="_blank">
-                            <img src="../assets/logo.jpg" alt="" v-show="true">
+                            <img src="../assets/logo.jpg" alt="" v-show="false">
                             <div>
                                 <strong :class="flag?'colorMoon':'colorSunny'">{{grandson.name}}</strong>
                                 <span>{{grandson.title}}</span>
