@@ -10,14 +10,16 @@
                     <span :style="{'color':flag?'#888':'#555'}">{{father.name}}</span>
                 </label>
 
-                <div><nav :class="flag?'bgColorMoon':'bgColorSunny'">
+                <div>
+                    <nav :class="flag?'bgColorMoon':'bgColorSunny'">
                         <li class="back"></li>
                         <li v-for="(son,sId) in father.one" :key="sId" 
                             :class="sId == 0 ?'currentLi':''" @click="clickNavs(fId,sId)" 
                             @mouseenter="enterNavs(fId,sId)" @mouseleave="leaveNavs(fId)">
                             {{son.name}}
                         </li>
-                    </nav><span>more+</span>
+                    </nav>
+                    <!-- <span>more+</span> -->
                 </div>
 
                 <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
@@ -92,9 +94,9 @@
 </template>
 
 <script>
-import Dialog from './Dialog'
-import Search from './Search'
-import Footer from './Footer'
+import Dialog from './basic/Dialog'
+import Search from './basic/Search'
+import Footer from './basic/Footer'
 export default {
     inject:['reload'],
     props:['flag'],

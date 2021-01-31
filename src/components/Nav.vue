@@ -33,14 +33,13 @@
             </el-menu>
         </aside>
 
-        <!-- 蒙版 -->
-        <!-- <transition name="mask">
+        <transition name="mask">
             <div class="mask" v-show="drawer" @click="drawer = !drawer"></div>
-        </transition> -->
+        </transition>
 
         <!-- 移动端状态下的导航抽屉 -->
         <transition name="drawer">
-            <div class="drawer" v-show="drawer">
+            <div class="drawer" v-show="drawer" :class="flag?'switchColor enterAside':''">
                 <div class="logo">
                     <img src="../assets/logo.jpg">
                     <transition name="logo"><span>LinnCooper</span></transition>
@@ -86,7 +85,7 @@
                 </div>
                 <div class="phone">
                     <img src="../assets/logo.jpg">
-                    <i class="el-icon-s-operation" @click="drawer = !drawer"></i>
+                    <i class="fa fa-bars" @click="drawer = !drawer"></i>
                 </div>
             </header>
 
@@ -94,35 +93,16 @@
         </section>
 
         <div class="weatherBox">
-            <div class="weather">
-                <i :class="className" 
-                    @mouseenter="showWeather = true" @mouseleave="showWeather = false"></i>
-                <div v-show="showWeather" @mouseenter="showWeather = true" 
-                    @mouseleave="showWeather = false">
-                    <header><label>{{now.city}}</label><span>简约天气</span></header>
-                    <main><span>{{now.wendu}}</span><span>{{now.type}}</span>
-                    </main>
-                    <footer>
-                        <table>
-                            <tr v-for="(item,index) in weatherList" :key="index">
-                                <td align="center">{{item.date}}</td>
-                                <td align="center">{{item.type}}</td>
-                                <td align="center">{{item.wendu}}</td>
-                                <td align="center">{{item.fengxiang}}</td>
-                            </tr>
-                        </table>
-                    </footer>
-                </div>
-            </div>
+            <Weather :flag="flag"></Weather>
 
             <div class="toggleMode">
-                <el-tooltip effect="dark" content="当前日间模式" placement="left">
+                <el-tooltip effect="dark" content="日间模式" placement="left">
                     <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
-                    v-show="!flag" @click="flag = true"></i>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="当前夜间模式" placement="left">
-                    <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
                     v-show="flag" @click="flag = false"></i>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="夜间模式" placement="left">
+                    <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
+                    v-show="!flag" @click="flag = true"></i>
                 </el-tooltip>
             </div>
         </div>
@@ -130,7 +110,11 @@
 </template>
 
 <script>
+import Weather from './basic/Weather'
 export default {
+    components:{
+        Weather
+    },
     data(){
         return {
             asideTop:[//左侧导航数据1
@@ -241,124 +225,35 @@ export default {
                 {router:'/link',className:'#icon-home',name:'主页'},
                 {router:'/link',className:'#icon-link',name:'友情链接'},
             ],
-            weatherList:[],//最近三天天气数据
-            now:{//当天天气信息
-                city:'',//当前城市
-                wendu:'',//当天平均温度
-                type:'',//当天天气状态
-            },
-            imageList:[//预加载图片数据
-                'https://s1.ax1x.com/2020/10/08/00iVJO.jpg'
-            ],
             isFold: true,//切换模式 折叠or打开
             flag:false,//切换模式 日间or夜间
-            showWeather:false,//切换天气模式 显示or隐藏
             drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
         }
     },
-    computed:{
-        className(){
-            let className = ''
-            if(!this.flag){
-                if(this.now.type == '晴'){
-                    className = 'el-icon-sunny ' + 'backtopWhite'
-                }else if(this.type == '多云'){
-                    className = 'el-icon-cloudy ' + 'backtopWhite'
-                }else{
-                    className = 'el-icon-heavy-rain ' + 'backtopWhite'
-                }
-            }else{
-                if(this.now.type == '晴'){
-                    className = 'el-icon-sunny ' + 'backtopBlack'
-                }else if(this.type == '多云'){
-                    className = 'el-icon-cloudy ' + 'backtopBlack'
-                }else{
-                    className = 'el-icon-heavy-rain ' + 'backtopBlack'
-                }
-            }
-            return className
-        }
-    },
     created() {
-        this.getLoactionCity()
         document.oncontextmenu =  () => {event.returnValue = false}
-        this.preLoadImg(this.imageList)
     },
     methods: {
-        // 预加载图片
-        preLoadImg(arr){
-            let imgList = []
-            arr.forEach((item,index) => {
-                imgList[index] = new Image()
-                imgList[index].src = arr[index]
-            })
-        },
         //锚点跳转
         location(fId,sId){
             var ul = document.querySelectorAll('.item>div nav')[fId]
             window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
             this.$refs.Link.clickNavs(fId,sId)
-        },
-        //获取当前地址,使用jsonp解决跨域问题 (get请求)
-        async getLoactionCity(){
-            const data = await this.$jsonp('https://restapi.amap.com/v3/ip?key=b30eb9c64b4094a062fa5cce3b26496e')
-            this.now.city = data.city
-            this.getWeather(data.city)
-        },
-        //根据城市获取城市天气
-        async getWeather(location){
-            const {data:res} = await this.$axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
-            if(res.status !== 1000) 
-            return this.$message.error('获取天气数据失败')
-            const value = res.data.forecast.slice(0,3)
-            this.dealWeather(value)
-        },
-        //处理天气数据
-        dealWeather(value){
-            value.map( (item,index) => {
-                if(index == 0){item.date = '今天';}
-                else if(index == 1){item.date = '明天';}
-                else{item.date = '后天';}
-                item.wendu = item.low.split(' ')[1] + '/' + item.high.split(' ')[1]
-            })
-            this.weatherList = value
-            let high = Number(value[0].high.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-            let low = Number(value[0].low.split(' ')[1].split('').filter(item => item !== '℃' && item).join(''))
-            this.now.wendu = (high + low) / 2 + '℃'
-            this.now.type = value[0].type
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
-
 #nav{
     display: flex;
     position: relative;
-    >aside{
+    aside{
         height: 100vh; 
         background-color: #f9f9f9;
         position: fixed;
         display: flex;
         flex-direction: column;
-    }
-    .drawer{
-        z-index: 999;
-        top: 0;
-        height: 100vh; 
-        background-color: #f9f9f9;
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-    }
-    .mask{
-        height: 100vh;
-        width: 100vw;
-        position: fixed;
-        background-color: rgba(0,0,0, .5);
-        border: 1px solid #fff;
-        z-index: 998;
     }
     >section{
         width: 100vw;
@@ -373,6 +268,32 @@ export default {
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        i{
+            padding: 12px 12px;
+            background-color: #eee;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px 0 rgba(0,0,0,0.12);
+            transition: color .25s;
+        }
+    }
+    .drawer{
+        z-index: 999;
+        top: 0;
+        left: 0;
+        height: 100vh; 
+        background-color: #f9f9f9;
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+    }
+    .mask{
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        background-color: rgba(0,0,0, .5);
+        border: 1px solid #fff;
+        z-index: 998;
     }
 }
 
@@ -447,85 +368,46 @@ export default {
             img{width: 50px;height: 50px;border-radius: 50%;margin-left: 20px;}
             >i{
                 font-size: 24px;
-                color:#2468F2;
+                color: #909399;
                 margin: 0 20px 0 20px;
                 cursor: pointer;
+                transition: color .25s;
+                &:hover{color: #2468F2!important;}
             }
         }
     }
 }
 
-#nav .weatherBox{
-    i{
-        padding: 12px 12px;
-        background-color: #eee;
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.12);
-        transition: color .25s;
-    }
-    .weather{
-        position: relative;
-        >div{
-            position: absolute;
-            top: 50px;
-            left: -1px;
-            transform: translate(-100%,-100%);
-            width: 270px;
-            height: 450px;
-            border-radius: 5px;
-            padding: 10px 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-color: rgba(0,0,0, .2);
-            backdrop-filter: blur(2px);
-            background: url(https://s1.ax1x.com/2020/10/08/00iVJO.jpg) no-repeat center;
-            background-size: cover;
-            z-index: 999;
-            header{
-                display: flex;
-                justify-content: space-between;
-                color: #fff;
-                font-size: 14px;
-            }
-            main{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                color: #fff;
-                padding-bottom:10px ;
-                span:first-child{font-size: 50px;}
-                span:last-child{
-                    font-size: 14px;
-                    background-color: #2468F2;
-                    border-radius: 5px;
-                    padding: 2px 5px;
-                }
-                border-bottom: 1px solid #fff;
-            }
-            footer{
-                color: #fff;
-                td{width: 25%;}
-            }
-        }
-        i{margin: 10px 0;}
-    }
-}
-
-.backtopBlack{background-color: #363738!important;color: #AAA!important;}
-.backtopWhite{background-color: #fff!important;color: #777!important;}
-
+.switchColor{background-color: #2C2E2F!important;}
 .el-backtop{
     color: #777;
     font-size: 14px;
-    right: 25px!important;
+    right: 24px!important;
     bottom: 112px!important;
     width: 40px;
     height: 40px;
     i{padding: 14px 15px;border-radius: 50%;}
 }
-header.black{a{color: #fff!important;}}
+.enterAside{
+    div.el-submenu__title:hover{
+        span{color: #2468F2!important;}
+    }
+    li.el-menu-item:hover{
+        background-color: #1B1D1F!important;
+        color: #2468F2!important;
+    } 
+}
+.backtopBlack{
+    background-color: #363738!important;
+    color: #AAA!important;
+    &:hover{color: #fff!important;}
+
+}
+.backtopWhite{
+    background-color: #fff!important;
+    color: #777!important;
+    &:hover{color: #000!important;}
+}
 .black::before{
     content: '';
     backdrop-filter: blur(5px);
@@ -551,36 +433,21 @@ header.black{a{color: #fff!important;}}
     background-attachment: fixed;
 }
 
-@keyframes drawerShow{from{left: -200px;}to{left: 0;}}
-@keyframes drawerHide{from{left: 0;}to{left: -200px;}}
-.switchColor{background-color: #2C2E2F!important;}
-.logo-enter,.logo-leave-to{opacity: 0;}
+.logo-enter,
+.logo-leave-to{opacity: 0;}
 .logo-enter-active{transition: all 1s;}
 .logo-leave-active{transition: all 0.2s;}
-.drawer-enter{
-    animation: drawerShow 1s linear forwards;
-    opacity: 0;
-}
-.drawer-leave-to{
-    animation: drawerHide 0.4s linear forwards;
-    opacity: 0;
-}
-.drawer-enter-active{transition: all 1s;}
-.drawer-leave-active{transition: all 0.4s;}
-.mask-enter,.mask-leave-to{opacity: 0;}
-.drawer-enter-active{transition: all 1s;}
-.drawer-leave-active{transition: all 0.4s;}
 
+.drawer-enter,
+.drawer-leave-to,
+.mask-enter,
+.mask-leave-to{opacity: 0;}
 
-.enterAside{
-    div.el-submenu__title:hover{
-        span{color: #2468F2!important;}
-    }
-    li.el-menu-item:hover{
-        background-color: #1B1D1F!important;
-        color: #2468F2!important;
-    } 
-} 
+.drawer-enter-active,
+.drawer-leave-active,
+.mask-enter-active
+.mask-leave-active{transition: all 1s;} 
+
 @media screen and (max-width: 760px) {
     #nav>aside,#nav>section>header .computer,.weatherBox{
         display: none!important;
