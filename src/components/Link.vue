@@ -173,14 +173,14 @@ export default {
         //点击导航
         clickNavs(fId,sId){
             var lis = document.querySelectorAll('.item>div nav')[fId].children
-            this.isClick = true
             this.blueBgPosition[fId] = lis[sId + 1].offsetLeft
             lis[0].style.left = lis[sId + 1].offsetLeft + 'px'
             lis[0].style.width = lis[sId + 1].offsetWidth - 20 + 'px'
             this.removeClass(lis,sId + 1)
+            this.isClick = true
             this.blueBgIndex[fId] = sId + 1
             this.clickIndex[fId].cIndex = sId
-            this.clickIndex[fId].bIndex = sId
+            this.clickIndex[fId].bIndex = sId + 1
         },
         //清除样式
         removeClass(dom,i){
