@@ -77,7 +77,7 @@ export default {
             if(this.width) list['width'] = this.width
             if(this.height) list['height'] = this.height
             if(this.isFlag) list['backgroundColor'] = '#2C2E2F'
-            else list['backgroundColor'] = '#FFFFFF'
+            else list['backgroundColor'] = '#F1F5F8'
             return list
         },
         maskStyle(){

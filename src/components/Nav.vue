@@ -1,21 +1,22 @@
 <template>
     <div id="nav">
 
-        <el-backtop><i :class="flag?'el-icon-caret-top backtopBlack':'el-icon-caret-top backtopWhite'"></i></el-backtop>
+        <el-backtop><i :class="flag?'el-icon-caret-top iconMoon':'el-icon-caret-top iconSunny'"></i></el-backtop>
 
-        <aside :class="flag?'switchColor enterAside':''">
+        <aside :class="flag?'asideMoon':'asideSunny'">
             <div class="logo">
                 <img src="../assets/logo.jpg">
-                <transition name="logo"><span v-show="!isFold">LinnCooper</span></transition>
+                <transition name="logo"><span v-show="!isFold">简约导航</span></transition>
             </div>
 
-            <el-menu :class="flag?'one switchColor':'one'" :collapse="isFold" :unique-opened="true">
+            <el-menu :class="flag?'one asideMoon scrollbarMoon':'one asideSunny scrollbarSunny'" 
+                :collapse="isFold" :unique-opened="true">
                 <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
                     <template slot="title">
                         <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
                         <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
                     </template>
-                    <el-menu-item-group :class="flag?'switchColor enterAside':''">
+                    <el-menu-item-group :class="flag?'asideMoon':'asideSunny'">
                         <span slot="title">{{father.title}}</span>
                         <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
                             @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
@@ -24,10 +25,10 @@
                 </el-submenu>
             </el-menu>
 
-            <el-menu :class="flag?'two switchColor':'two'" :collapse="isFold">
+            <el-menu :class="flag?'two asideMoon':'two asideSunny'" :collapse="isFold">
                 <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="0" @click="clickLoginBtn">
                     <i class="el-icon-user-solid"></i>
-                    <span slot="title">登录</span>
+                    <span slot="title">账号登录</span>
                 </el-menu-item>
                 <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="1">
                     <i class="el-icon-warning-outline"></i>
@@ -39,19 +40,20 @@
         <transition name="mask"><div class="mask" v-show="drawer" @click="drawer = !drawer"></div></transition>
 
         <transition name="drawer">
-            <div class="drawer" v-show="drawer" :class="flag?'switchColor enterAside':''">
+            <div class="drawer" v-show="drawer" :class="flag?'asideMoon':'asideSunny'">
                 <div class="logo">
                     <img src="../assets/logo.jpg">
-                    <transition name="logo"><span>LinnCooper</span></transition>
+                    <transition name="logo"><span>简约导航</span></transition>
                 </div>
 
-                <el-menu :class="flag?'one switchColor':'one'" :unique-opened="true">
+                <el-menu :class="flag?'one asideMoon scrollbarMoon':'one asideSunny scrollbarSunny'"
+                    :unique-opened="true">
                     <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
                         <template slot="title">
                             <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
                             <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
                         </template>
-                        <el-menu-item-group :class="flag?'switchColor enterAside':''">
+                        <el-menu-item-group :class="flag?'asideMoon':'asideSunny'">
                             <span slot="title">{{father.title}}</span>
                             <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
                                 @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
@@ -60,7 +62,7 @@
                     </el-submenu>
                 </el-menu>
 
-                <el-menu :class="flag?'two switchColor':'two'">
+                <el-menu :class="flag?'two asideMoon':'two asideSunny'">
                     <el-menu-item :style="{'color':flag?'#fff':'#000'}">
                         <i class="eel-icon-warning-outline"></i>
                         <span slot="title">关于本站</span>
@@ -70,7 +72,7 @@
         </transition>
 
         <section :style="{'padding-left':isFold ?'64px':'200px'}">
-            <header :class="flag?'black':'white'">
+            <header :class="flag?'hairyglassMoon':'hairyglassSunny'">
                 <div class="computer">
                     <img src="../assets/logo.jpg">
                     <i class="fa fa-bars" @click="isFold = false" v-show="isFold"></i>
@@ -96,11 +98,11 @@
 
             <div class="toggleMode">
                 <el-tooltip effect="dark" content="日间模式" placement="left">
-                    <i :class="flag?'el-icon-sunny backtopBlack':'el-icon-sunny backtopWhite'" 
+                    <i :class="flag?'el-icon-sunny iconMoon':'el-icon-sunny iconSunny'" 
                     v-show="flag" @click="flag = false"></i>
                 </el-tooltip>
                 <el-tooltip effect="dark" content="夜间模式" placement="left">
-                    <i :class="flag?' el-icon-moon backtopBlack':'el-icon-moon backtopWhite'" 
+                    <i :class="flag?' el-icon-moon iconMoon':'el-icon-moon iconSunny'" 
                     v-show="!flag" @click="flag = true"></i>
                 </el-tooltip>
             </div>
@@ -284,7 +286,7 @@ export default {
         display: flex;
         flex-direction: column;
         i{
-            padding: 12px 12px;
+            padding: 13px 13px;
             background-color: #eee;
             border-radius: 50%;
             cursor: pointer;
@@ -328,9 +330,6 @@ export default {
         max-height: 750px;
         overflow-y: auto;
         overflow-x: hidden;
-        &::-webkit-scrollbar {width: 6px;}
-        &::-webkit-scrollbar-thumb {background-color: #ddd;border-radius: 3px;}
-        &::-webkit-scrollbar-track{background-color: #fff;}
     }
     .one,.two{border: 0;background-color: #f9f9f9;}
     .two{margin-top: auto;}
@@ -393,59 +392,78 @@ export default {
     }
 }
 
-.switchColor{background-color: #2C2E2F!important;}
 .el-backtop{
     color: #777;
     font-size: 14px;
-    right: 24px!important;
+    right: 25px!important;
     bottom: 112px!important;
     width: 40px;
     height: 40px;
-    i{padding: 14px 15px;border-radius: 50%;}
+    i{padding: 14px 14px;border-radius: 50%;}
 }
-.enterAside{
+.asideSunny{
+    background-color: #F1F5F8!important;
     div.el-submenu__title:hover{
         span{color: #2468F2!important;}
     }
     li.el-menu-item:hover{
-        background-color: #1B1D1F!important;
+        background-color: #FFF!important;
         color: #2468F2!important;
     } 
 }
-.backtopBlack{
-    background-color: #363738!important;
-    color: #AAA!important;
-    &:hover{color: #fff!important;}
-
+.asideMoon{
+    background-color: #1B1D1F!important;
+    div.el-submenu__title:hover{
+        span{color: #2468F2!important;}
+    }
+    li.el-menu-item:hover{
+        background-color: #2C2E2F!important;
+        color: #2468F2!important;
+    } 
 }
-.backtopWhite{
+.hairyglassSunny::before{
+    content: '';
+    backdrop-filter: blur(5px);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-color: rgba(241,245,248, .8);
+    background-attachment: fixed;
+}
+.hairyglassMoon::before{
+    content: '';
+    backdrop-filter: blur(5px);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-color: rgba(27,29,31, .8);
+    background-attachment: fixed;
+}
+.iconSunny{
     background-color: #fff!important;
     color: #777!important;
     &:hover{color: #000!important;}
 }
-.black::before{
-    content: '';
-    backdrop-filter: blur(5px);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    background-color: rgba(0,0,0, .2);
-    background-attachment: fixed;
+.iconMoon{
+    background-color: #363738!important;
+    color: #AAA!important;
+    &:hover{color: #fff!important;}
 }
-.white::before{
-    content: '';
-    backdrop-filter: blur(5px);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    background-color: rgba(253,253,253, .8);
-    background-attachment: fixed;
+.scrollbarSunny{
+    &::-webkit-scrollbar {width: 6px;border-radius: 4px;}
+    &::-webkit-scrollbar-thumb {background-color: #fff;border-radius: 4px;}
+    &::-webkit-scrollbar-track{background-color: #F1F5F8;}
+}
+.scrollbarMoon{
+    &::-webkit-scrollbar {width: 6px;border-radius: 4px;}
+    &::-webkit-scrollbar-thumb {background-color: #2C2E2F;border-radius: 4px;}
+    &::-webkit-scrollbar-track{background-color: #1B1D1F;}
 }
 
 .logo-enter,
@@ -457,14 +475,13 @@ export default {
 .drawer-leave-to,
 .mask-enter,
 .mask-leave-to{opacity: 0;}
-
 .drawer-enter-active,
 .drawer-leave-active,
 .mask-enter-active
 .mask-leave-active{transition: all 1s;} 
 
-@media screen and (max-width: 760px) {
-    #nav>aside,#nav>section>header .computer,.weatherBox{
+@media screen and (max-width: 960px) {
+    #nav>aside,#nav>section>header .computer{
         display: none!important;
     }
     #nav>section>header .computer>img{
@@ -475,11 +492,14 @@ export default {
         padding-left: 0!important;
     }
     #nav>.el-backtop{
-        right: 18px!important;
-        bottom: 20px!important;
+        bottom: 60px!important;
+    }
+    #nav .weatherBox{
+        height: 40px;
+        bottom: 10px;
     }
 }
-@media screen and (min-width: 761px) { 
+@media screen and (min-width: 961px) { 
     section header .phone{
         display: none!important;
     }

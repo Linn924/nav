@@ -1,5 +1,5 @@
 <template>
-    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#f9f9f9'}">
+    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
         <Search></Search>
 
         <section>
@@ -190,24 +190,14 @@ export default {
         //导航上浮动画
         up(fId,sId,grandsId){
             var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
-            if(!this.flag){
-                li.classList.remove('downSunny')
-                li.classList.add('upSunny')
-            }else{
-                li.classList.remove('downMoon')
-                li.classList.add('upMoon')
-            }
+            li.classList.remove('down')
+            li.classList.add('up')
         },
         //导航下降动画
         down(fId,sId,grandsId){
             var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
-            if(!this.flag){
-                li.classList.remove('upSunny')
-                li.classList.add('downSunny')
-            }else{
-                li.classList.remove('upMoon')
-                li.classList.add('downMoon')
-            }
+            li.classList.remove('up')
+            li.classList.add('down')
         },
         //点击添加自定义网站方块
         clickAddBtn(fId,sId){
@@ -338,7 +328,7 @@ section{
             li{
                 height: 70px;
                 box-sizing: border-box;
-                border-radius: 4px;
+                border-radius: 3px;
                 display: flex;
                 padding-right: 5px;
                 a{
@@ -445,66 +435,38 @@ section{
     }
 }
 
-.upSunny{animation: upSunny .15s linear forwards;} 
-.downSunny{animation: downSunny .15s linear forwards;} 
-.upMoon{animation: upMoon .15s linear forwards;} 
-.downMoon{animation: downMoon .15s linear forwards;} 
 .currentLi{color: #fff!important;}
+.up{animation: up .15s linear forwards;} 
+.down{animation: down .15s linear forwards;} 
+.colorSunny{color: #282A2D!important;}
+.colorMoon{color:#C6C9CF!important;}
+.bgColorSunny{background-color: #FFF!important;}
+.bgColorMoon{background-color: #363738!important;}
 .liSunny{
-    box-shadow: 6px 8px 12px #e2dede,-6px 8px 12px #e2dede!important;
     background-color: #fff!important;
     .icon>i{color: #E7E9EA!important;}
     &:hover{.icon>i{color: #2c2e2f!important;}}
 }
 .liMoon{
-    box-shadow: 6px 8px 12px rgba(0,0,0, .2),-6px 8px 12px rgba(0,0,0, .2)!important;
     background-color: #2c2e2f!important;
     .icon>i{color: #343739!important;}
     &:hover{.icon>i{color: #fff!important;}}
 }
-.colorSunny{color: #282A2D!important;}
-.colorMoon{color:#C6C9CF!important;}
-.bgColorSunny{background-color: #F1F3F6!important;}
-.bgColorMoon{background-color: #363738!important;}
 
-@keyframes upSunny {
+@keyframes up {
   from{
       transform: translateY(0);
-      box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
   }
   to{
       transform: translateY(-10px);
-      box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
   }                  
 }
-@keyframes downSunny {
+@keyframes down {
   from{
       transform: translateY(-10px);
-      box-shadow: 2px 2px 2px rgba(0, 0, 0, .12),-2px -2px 2px rgba(0, 0, 0, .12);
   }
   to{
       transform: translateY(0);
-      box-shadow: 6px 8px 12px rgba(0, 0, 0, .12),-6px 8px 12px rgba(0, 0, 0, .12);
-  }                  
-}
-@keyframes upMoon {
-  from{
-      transform: translateY(0);
-      box-shadow: 2px 2px 2px rgba(255,255,255, .12),-2px -2px 2px rgba(255,255,255, .12);
-  }
-  to{
-      transform: translateY(-10px);
-      box-shadow: 6px 8px 12px rgba(255,255,255, .12),-6px 8px 12px rgba(255,255,255, .12);
-  }                  
-}
-@keyframes downMoon {
-  from{
-      transform: translateY(-10px);
-      box-shadow: 2px 2px 2px  rgba(255,255,255, .12),-2px -2px 2px  rgba(255,255,255, .12);
-  }
-  to{
-      transform: translateY(0);
-      box-shadow: 6px 8px 12px  rgba(255,255,255, .12),-6px 8px 12px  rgba(255,255,255, .12);
   }                  
 }
 
@@ -547,6 +509,14 @@ section{
         margin: 0 2% 30px 0;
         width: 48%;
         &:nth-child(2n){margin-right: 0;}
+    }
+}
+@media screen and (max-width: 960px) {
+    section .item>nav li .icon{
+        display: none;
+    }
+    section .item>nav li:last-child{
+        display: none;
     }
 }
 </style>

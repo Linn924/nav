@@ -82,19 +82,19 @@ export default {
             let className = ''
             if(!this.flag){
                 if(this.now.type == '晴'){
-                    className = 'el-icon-sunny ' + 'backtopWhite'
+                    className = 'el-icon-sunny ' + 'iconSunny'
                 }else if(this.now.type == '多云'){
-                    className = 'el-icon-cloudy ' + 'backtopWhite'
+                    className = 'el-icon-cloudy ' + 'iconSunny'
                 }else{
-                    className = 'el-icon-heavy-rain ' + 'backtopWhite'
+                    className = 'el-icon-heavy-rain ' + 'iconSunny'
                 }
             }else{
                 if(this.now.type == '晴'){
-                    className = 'el-icon-sunny ' + 'backtopBlack'
+                    className = 'el-icon-sunny ' + 'iconMoon'
                 }else if(this.now.type == '多云'){
-                    className = 'el-icon-cloudy ' + 'backtopBlack'
+                    className = 'el-icon-cloudy ' + 'iconMoon'
                 }else{
-                    className = 'el-icon-heavy-rain ' + 'backtopBlack'
+                    className = 'el-icon-heavy-rain ' + 'iconMoon'
                 }
             }
             return className
@@ -119,7 +119,7 @@ export default {
     position: relative;
     cursor: pointer;
     >i{
-        padding: 12px 12px;
+        padding: 13px 13px;
         background-color: #eee;
         border-radius: 50%;
         box-shadow: 0 2px 10px 0 rgba(0,0,0,0.12);
@@ -183,15 +183,20 @@ export default {
     }
 }
 
-.backtopBlack{
+.iconMoon{
     background-color: #363738!important;
     color: #AAA!important;
     &:hover{color: #fff!important;}
 
 }
-.backtopWhite{
+.iconSunny{
     background-color: #fff!important;
     color: #777!important;
     &:hover{color: #000!important;}
+}
+@media screen and (max-width: 960px) {
+    #weather{
+        display: none;
+    }
 }
 </style>
