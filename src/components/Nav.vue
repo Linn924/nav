@@ -124,12 +124,12 @@ export default {
                     className:'el-icon-location',
                     title:'常用站点',
                     children:[
-                        {id:0,title:'阅读'},
-                        {id:1,title:'购物'},
-                        {id:2,title:'直播'},
-                        {id:3,title:'国外'},
-                        {id:4,title:'视频'},
-                        {id:5,title:'工具'}
+                        {id:0,title:'开发'},
+                        {id:1,title:'影视'},
+                        {id:2,title:'导航'},
+                        {id:3,title:'实时信息'},
+                        {id:4,title:'个人网站'},
+                        {id:5,title:'直播'}
                     ]
                 },
                 {
@@ -137,8 +137,8 @@ export default {
                     className:'el-icon-video-camera-solid',
                     title:'视频直播',
                     children:[
-                        {id:0,title:'免费在线'},
-                        {id:1,title:'高清下载'},
+                        {id:0,title:'索引'},
+                        {id:1,title:'在线'},
                         {id:2,title:'追剧'},
                         {id:3,title:'动漫'},
                         {id:4,title:'解析'}
@@ -149,9 +149,11 @@ export default {
                     className:'el-icon-zoom-in',
                     title:'资源搜索',
                     children:[
-                        {id:0,title:'网盘搜索'},
-                        {id:1,title:'BT搜索'},
-                        {id:2,title:'磁力软件'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'常用搜索'},
+                        {id:2,title:'网盘搜索'},
+                        {id:3,title:'以图搜索'},
+                        {id:4,title:'数据搜索'}
                     ]
                 },
                 {
@@ -159,11 +161,12 @@ export default {
                     className:'el-icon-s-platform',
                     title:'软件游戏',
                     children:[
-                        {id:0,title:'精品软件'},
-                        {id:1,title:'安卓'},
-                        {id:2,title:'苹果'},
-                        {id:3,title:'游戏'},
-                        {id:4,title:'浏览器'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'综合'},
+                        {id:2,title:'安卓'},
+                        {id:3,title:'苹果'},
+                        {id:4,title:'游戏'},
+                        {id:5,title:'浏览器'}
                     ]
                 },
                 {
@@ -171,8 +174,9 @@ export default {
                     className:'el-icon-s-order',
                     title:'阅读漫画',
                     children:[
-                        {id:0,title:'阅读小说'},
-                        {id:1,title:'免费漫画'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'阅读小说'},
+                        {id:2,title:'免费漫画'}
                     ]
                 },
                 {
@@ -180,9 +184,9 @@ export default {
                     className:'fa fa-music',
                     title:'音乐动听',
                     children:[
-                        {id:0,title:'在线音乐'},
-                        {id:1,title:'无损音乐'},
-                        {id:2,title:'音乐软件'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'在线音乐'},
+                        {id:2,title:'无损音乐'}
                     ]
                 },
                 {
@@ -190,10 +194,11 @@ export default {
                     className:'fa fa-wrench',
                     title:'实用工具',
                     children:[
-                        {id:0,title:'综合工具'},
-                        {id:1,title:'功能类'},
-                        {id:2,title:'文件处理'},
-                        {id:3,title:'图片处理'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'综合'},
+                        {id:2,title:'功能类'},
+                        {id:3,title:'文件处理'},
+                        {id:4,title:'图片处理'}
                     ]
                 },
                 {
@@ -201,8 +206,9 @@ export default {
                     className:'el-icon-edit',
                     title:'学习教育',
                     children:[
-                        {id:0,title:'学习网站'},
-                        {id:1,title:'文档学术'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'好好学习'},
+                        {id:2,title:'文档学术'}
                     ]
                 },
                 {
@@ -210,12 +216,13 @@ export default {
                     className:'el-icon-s-cooperation',
                     title:'办公素材',
                     children:[
-                        {id:0,title:'PPT'},
-                        {id:1,title:'图库'},
-                        {id:2,title:'壁纸'},
-                        {id:3,title:'图标'},
-                        {id:4,title:'字体'},
-                        {id:5,title:'配色'}
+                        {id:0,title:'索引'},
+                        {id:1,title:'PPT'},
+                        {id:2,title:'图库'},
+                        {id:3,title:'壁纸'},
+                        {id:4,title:'图标'},
+                        {id:5,title:'字体'},
+                        {id:6,title:'配色'}
                     ]
                 },
             ],
