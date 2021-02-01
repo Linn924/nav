@@ -28,7 +28,7 @@
                         @mouseleave="down(fId,sId,grandsId)">
 
                         <a :href="grandson.url" target="_blank">
-                            <img src="../assets/logo.jpg" alt="" v-show="false">
+                            <img :src="grandson.logo?grandson.logo:logo">
                             <div>
                                 <strong :class="flag?'colorMoon':'colorSunny'">{{grandson.name}}</strong>
                                 <span>{{grandson.title}}</span>
@@ -130,13 +130,11 @@ export default {
             deleteDialogVisible:false,//删除自定义网站对话框 显示or隐藏
             clickLiIndex:0,//右键点击的导航网站
             deleteLiIndex:0,//即将删除的导航网站下标
+            logo:require('../assets/logo.jpg'),//默认图标
         }
     },
     created() {
         this.getNavs()
-    },
-    updated(){
-        for(let i = 0; i < this.navList.length; i++){this.leaveNavs(i)}
     },
     methods: {
         //获取导航数据
@@ -304,6 +302,7 @@ section{
                 }
                 .back{
                     position: absolute;
+                    width: 28px;
                     top: 50%;
                     left: 3px;
                     height: 24px;
