@@ -10,7 +10,7 @@ import 'nprogress/nprogress.css'
 axios.defaults.baseURL='http://localhost:8888/'
 
 axios.interceptors.request.use(config => {
-  NProgress.start()
+  config.url === 'navs' && NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })

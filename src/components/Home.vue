@@ -30,7 +30,11 @@
                     <i class="el-icon-user-solid"></i>
                     <span slot="title">账号登录</span>
                 </el-menu-item>
-                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="1">
+                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="1" @click="logout" v-show="token">
+                    <i class="el-icon-coordinate"></i>
+                    <span slot="title">退出登录</span>
+                </el-menu-item>
+                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="2">
                     <i class="el-icon-warning-outline"></i>
                     <span slot="title">关于本站</span>
                 </el-menu-item>
@@ -90,7 +94,7 @@
                 </div>
             </header>
 
-            <main><router-view ref="Link" :flag="flag"></router-view></main>
+            <main><router-view ref="Link" :flag="flag" :token="token"></router-view></main>
         </section>
 
         <div class="weatherBox">
@@ -113,6 +117,7 @@
 <script>
 import Weather from './basic/Weather'
 export default {
+    inject:['reload'],
     components:{
         Weather
     },
@@ -227,8 +232,8 @@ export default {
                 },
             ],
             routerList:[//路由导航
-                {router:'/nav',className:'#icon-home',name:'主页'},
-                {router:'/nav',className:'#icon-link',name:'友情链接'},
+                {router:'/home',className:'#icon-home',name:'主页'},
+                {router:'/home',className:'#icon-link',name:'友情链接'},
             ],
             isFold: true,//切换模式 折叠or打开
             flag:false,//切换模式 日间or夜间
@@ -237,12 +242,15 @@ export default {
                 'https://s3.ax1x.com/2021/01/31/yEVgQs.png',
                 'https://s3.ax1x.com/2021/01/31/yEVTW4.jpg',
                 'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg',
-                'https://s3.ax1x.com/2020/12/04/DqicSe.jpg'
+                'https://s3.ax1x.com/2020/12/04/DqicSe.jpg',
+                'https://s3.ax1x.com/2021/02/02/ynl0PJ.jpg'
             ],
+            token:false,//判断管理员的登录状态 登录or未登录
         }
     },
     created() {
         document.oncontextmenu =  () => {event.returnValue = false}
+        this.token = sessionStorage.getItem('token') ? true : false
         this.preLoadImg(this.imageList)
     },
     methods: {
@@ -256,13 +264,23 @@ export default {
         },
         //锚点跳转
         location(fId,sId){
-            var ul = document.querySelectorAll('.item>div nav')[fId]
-            window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
-            this.$refs.Link.clickNavs(fId,sId)
+            let url = location.href
+            if(url.includes('navlist')){
+                var ul = document.querySelectorAll('.item>div nav')[fId]
+                window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
+                this.$refs.Link.clickNavs(fId,sId)
+            }else if(url.includes('navdetail')){
+                this.$router.push('/home/navlist')
+            }
         },
         //跳转到登录界面
         clickLoginBtn(){
             this.$router.push('/login')
+        },
+        //管理员登出
+        logout(){
+            sessionStorage.clear()
+            this.reload()
         }
     }
 }

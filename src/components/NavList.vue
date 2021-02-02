@@ -24,8 +24,8 @@
 
                 <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
                     <li v-for="(grandson,grandsId) in son.children" :key="grandsId" 
-                        :class="flag?'liMoon':'liSunny'" @mouseenter="up(fId,sId,grandsId)" 
-                        @mouseleave="down(fId,sId,grandsId)">
+                        :class="fId != 0 && sId == 0 ? className + ' indexLi' : className" 
+                        @mouseenter="up(fId,sId,grandsId)" @mouseleave="down(fId,sId,grandsId)">
 
                         <a :href="grandson.url" target="_blank">
                             <img :src="grandson.logo?grandson.logo:logo">
@@ -35,7 +35,7 @@
                             </div>
                         </a>
 
-                        <div class="icon">
+                        <div class="icon" v-show="token">
                             <i class="fa fa-chevron-circle-left" v-show="clickLiIndex !== grandson.id" 
                                 @click="clickLiIndex = grandson.id"></i>
                             <i class="fa fa-chevron-circle-right" v-show="clickLiIndex === grandson.id" 
@@ -50,7 +50,9 @@
                         </div>
 
                     </li>
-                    <li :class="flag?'liMoon':'liSunny'" title="自定义网站" @click="clickAddBtn(father.id,son.id)">
+                    
+                    <li :class="fId != 0 && sId == 0 ? className + ' indexLastLi' : className" 
+                        title="自定义网站" v-show="token" @click="clickAddBtn(father.id,son.id)">
                         <i class="el-icon-plus" :class="flag?'colorMoon':'colorSunny'"></i>
                     </li>
                 </nav>
@@ -99,7 +101,7 @@ import Search from './basic/Search'
 import Footer from './basic/Footer'
 export default {
     inject:['reload'],
-    props:['flag'],
+    props:['flag','token'],
     components:{
         Dialog,
         Search,
@@ -131,6 +133,18 @@ export default {
             clickLiIndex:0,//右键点击的导航网站
             deleteLiIndex:0,//即将删除的导航网站下标
             logo:require('../assets/logo.jpg'),//默认图标
+        }
+    },
+    computed:{
+        className(){
+            let className = ''
+            if(this.flag){
+                className = 'liMoon'
+
+            }else{
+                className = 'liSunny'
+            }
+            return className
         }
     },
     created() {
@@ -196,6 +210,7 @@ export default {
             var li = document.querySelectorAll('.item')[fId].querySelectorAll('nav')[sId + 1].children[grandsId]
             li.classList.remove('up')
             li.classList.add('down')
+            setTimeout(() => {li.classList.remove('down')},160)
         },
         //点击添加自定义网站方块
         clickAddBtn(fId,sId){
@@ -356,6 +371,9 @@ section{
                             margin-bottom: 5px;
                             color:#000;
                             transition: color .25s;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         }
                         span{
                             color: #6C757D;
@@ -435,6 +453,24 @@ section{
 }
 
 .currentLi{color: #fff!important;}
+.indexLi{
+    a{padding-left: 8px!important;}
+    a img{
+        border-radius: 0!important;
+        height: inherit!important;
+        width: 115px!important;
+        margin-right: 20px!important;
+        border-radius: 2px!important;
+    }
+    a strong{
+        font-size: 16px;
+        margin-bottom: 10px!important;
+    }
+}
+.indexLastLi{
+    width: 412px!important;
+    height: 85px!important;
+}
 .up{animation: up .15s linear forwards;} 
 .down{animation: down .15s linear forwards;} 
 .colorSunny{color: #282A2D!important;}
@@ -469,44 +505,65 @@ section{
   }                  
 }
 
-@media screen and (min-width: 1920px) {
+@media screen and (min-width: 1921px) {
     section .item>nav li{
         margin: 0 30px 30px 0;
         width: 270px;
     }
+    section .item>nav li.indexLi{
+        margin: 0 30px 30px 0;
+        width: 400px!important;
+    }
 }
-@media screen and (min-width: 1680px) and (max-width: 1920px) {
+@media screen and (min-width: 1681px) and (max-width: 1920px) {
     section .item>nav li{
         margin: 0 2% 30px 0;
         width: 15%;
         &:nth-child(6n){margin-right: 0;}
     }
-}
-@media screen and (min-width: 1200px) and (max-width: 1680px) {
-    section .item>nav li{
+    section .item>nav li.indexLi{
         margin: 0 2% 30px 0;
-        width: 18.4%;
-        &:nth-child(5n){margin-right: 0;}
+        width: 23.5%;
+        height: 85px;
+        &:nth-child(4n){margin-right: 0;}
     }
 }
-@media screen and (min-width: 960px) and (max-width: 1200px) {
+@media screen and (min-width: 1201px) and (max-width: 1680px) {
+    section .item>nav li{
+        margin: 0 1% 30px 0;
+        width: 19.2%;
+        &:nth-child(5n){margin-right: 0;}
+    }
+    section .item>nav li.indexLi{
+        margin: 0 2% 30px 0;
+        width: 32%;
+        height: 6vw;
+        &:nth-child(3n){margin-right: 0;}
+    }
+}
+@media screen and (min-width: 961px) and (max-width: 1200px) {
     section .item>nav li{
         margin: 0 2% 30px 0;
         width: 23.5%;
         &:nth-child(4n){margin-right: 0;}
     }
+    section .item>nav li.indexLi{
+        margin: 0 2% 30px 0;
+        width: 32%;
+        height: 8vw;
+        &:nth-child(3n){margin-right: 0;}
+    }
 }
-@media screen and (min-width: 760px) and (max-width: 960px) {
+@media screen and (min-width: 761px) and (max-width: 960px) {
     section .item>nav li{
         margin: 0 2% 30px 0;
         width: 32%;
         &:nth-child(3n){margin-right: 0;}
     }
-}
-@media screen and (max-width: 760px) {
-    section .item>nav li{
+    section .item>nav li.indexLi{
         margin: 0 2% 30px 0;
-        width: 48%;
+        width: 49%;
+        height: 9vw;
         &:nth-child(2n){margin-right: 0;}
     }
 }
@@ -518,4 +575,26 @@ section{
         display: none;
     }
 }
+@media screen and (max-width: 760px) {
+    section .item>nav li{
+        margin: 0 2% 30px 0;
+        width: 49%;
+        &:nth-child(2n){margin-right: 0;}
+    }
+    section .item>nav li.indexLi{
+        margin: 0 2% 30px 0;
+        width: 49%;
+        height: 10vw;
+        &:nth-child(2n){margin-right: 0;}
+    }
+}
+@media screen and (max-width: 540px) {
+    section .item>nav li.indexLi{
+        margin-bottom:30px;
+        width: 99%;
+        height: 85px;
+        margin-right: 0;
+    }
+}
+
 </style>
