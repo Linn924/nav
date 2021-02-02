@@ -1,8 +1,9 @@
 <template>
     <div id="detail" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
-        当前ID：{{id}} <br>
+        <!-- 当前ID：{{id}} <br>
         当前模式：{{flag}} <br>
-        登录状态：{{token}}
+        登录状态：{{token}} -->
+        暂无
     </div>
 </template>
 
