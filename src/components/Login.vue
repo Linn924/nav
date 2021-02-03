@@ -33,7 +33,7 @@
                                 <span>|</span>
                                 <router-link to="/login">忘记密码</router-link>
                                 <span>|</span>
-                                <router-link to="/nav">游客浏览</router-link>
+                                <router-link to="/home">游客浏览</router-link>
                             </div>
                             <p class="account-tips">温馨提示：<br/>只有登录才能使用一些有权限的功能哦!</p>
                         </div>
@@ -128,7 +128,7 @@ export default {
         width: 1200px;
         border-radius: 5px;
         margin: 0 auto;
-        background:url(https://s3.ax1x.com/2020/12/04/DqicSe.jpg) no-repeat center center;
+        background:url(https://s3.ax1x.com/2021/02/02/ynl0PJ.jpg) no-repeat right center;
     }
     footer{
         flex: 1;

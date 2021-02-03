@@ -28,7 +28,7 @@
                         @mouseenter="up(fId,sId,grandsId)" @mouseleave="down(fId,sId,grandsId)">
 
                         <a :href="grandson.url" target="_blank">
-                            <img :src="grandson.logo?grandson.logo:logo">
+                            <img class="img" :src="loging" :data-src="grandson.logo">
                             <div>
                                 <strong :class="flag?'colorMoon':'colorSunny'">{{grandson.name}}</strong>
                                 <span>{{grandson.title}}</span>
@@ -138,7 +138,9 @@ export default {
             deleteDialogVisible:false,//删除自定义网站对话框 显示or隐藏
             clickLiIndex:0,//右键点击的导航网站
             deleteLiIndex:0,//即将删除的导航网站下标
-            logo:require('../assets/logo.jpg'),//默认图标
+            loging:require('../assets/loging.gif'),//默认图标
+            timer:null,//滚动事件定时器
+            initFlag:false,//页面加载时调用滚动和图片加载事件 执行了or未执行
         }
     },
     computed:{
@@ -155,6 +157,12 @@ export default {
     },
     created() {
         this.getNavs()
+    },
+    updated(){
+        if(!this.initFlag){
+            this.isLoad()
+            this.isScroll()
+        }
     },
     methods: {
         //获取导航数据
@@ -269,6 +277,39 @@ export default {
             this.$message({message:`${res.tips}`,type:'success',duration:1000})
             this.deleteDialogVisible = false
             this.reload()
+        },
+        //加载图片
+        isLoad(){
+            //已加载的图片过滤
+            let imgs = Array.from(document.querySelectorAll('.img:not([data-isloaded])'))
+            imgs.forEach( item => {
+                if(this.isShow(item)){
+                    this.isLazy(item)
+                }
+            })
+            this.initFlag = true
+        },
+        //页面滚动事件
+        isScroll(){
+            window.addEventListener('scroll',() => {
+                if(this.timer) return 
+                setTimeout(() => {
+                    this.isLoad()
+                    this.timer = null
+                },200)
+            })
+        },
+        //懒加载图片核心原理
+        isLazy(img){
+            img.src = img.dataset.src
+            img.setAttribute('data-isLoaded', true) //已加载过的图片做标记(下次不获取加载过的元素)
+            img.classList.add('fadeIn') //图片出现加载过度动画
+        },
+        //是否展示(元素距离顶部的高度 <= 窗口高度 + 窗口滚动高度)
+        isShow(img){
+            let clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+            return img.offsetTop <= clientHeight + scrollTop
         }
     }
 }
@@ -495,7 +536,13 @@ section{
     .icon>i{color: #343739!important;}
     &:hover{.icon>i{color: #fff!important;}}
 }
-
+.fadeIn{
+    animation: fadeIn 1s ease forwards;
+}
+@keyframes fadeIn {
+    0%{opacity: 0}
+    100%{opacity: 1}
+}
 @keyframes up {
   from{
       transform: translateY(0);

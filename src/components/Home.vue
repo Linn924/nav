@@ -231,7 +231,6 @@ export default {
                 'https://s3.ax1x.com/2021/01/31/yEVgQs.png',
                 'https://s3.ax1x.com/2021/01/31/yEVTW4.jpg',
                 'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg',
-                'https://s3.ax1x.com/2020/12/04/DqicSe.jpg',
                 'https://s3.ax1x.com/2021/02/02/ynl0PJ.jpg'
             ],
             token:false,//判断管理员的登录状态 登录or未登录
