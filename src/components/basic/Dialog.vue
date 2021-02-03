@@ -38,7 +38,7 @@ export default {
         },
         height:{
             type:String,
-            default:'290px'
+            default:'330px'
         },
         cancelTxt:{
             type:String,

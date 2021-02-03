@@ -34,10 +34,6 @@
                     <i class="el-icon-coordinate"></i>
                     <span slot="title">退出登录</span>
                 </el-menu-item>
-                <el-menu-item :style="{'color':flag?'#fff':'#000'}" index="2">
-                    <i class="el-icon-warning-outline"></i>
-                    <span slot="title">关于本站</span>
-                </el-menu-item>
             </el-menu>
         </aside>
 
@@ -64,13 +60,6 @@
                             </el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                </el-menu>
-
-                <el-menu :class="flag?'two asideMoon':'two asideSunny'">
-                    <el-menu-item :style="{'color':flag?'#fff':'#000'}">
-                        <i class="eel-icon-warning-outline"></i>
-                        <span slot="title">关于本站</span>
-                    </el-menu-item>
                 </el-menu>
             </div>
         </transition>

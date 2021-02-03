@@ -32,37 +32,25 @@ export default {
             navTop:[
                 {id:0,title:'搜索'},
                 {id:1,title:'网盘'},
-                {id:2,title:'软件'},
-                {id:3,title:'书籍'},
-                {id:4,title:'菜谱'}
+                {id:2,title:'书籍'}
             ],
             navBottom:[
                 {
                     children:[
                         {id:0,title:'百度',path:'https://www.baidu.com/s?wd='},
                         {id:1,title:'Google',path:'http://www.google.com/search?q='},
-                        {id:2,title:'秘迹',path:'https://www.mijisou.com/?q='},
-                        {id:3,title:'多吉',path:'https://www.dogedoge.com/results?q='},
-                        {id:4,title:'Magi',path:'https://magi.com/search?q='},
-                        {id:5,title:'Bing',path:'https://cn.bing.com/search?q='}
+                        {id:2,title:'多吉',path:'https://www.dogedoge.com/results?q='},
+                        {id:3,title:'Magi',path:'https://magi.com/search?q='},
+                        {id:4,title:'Bing',path:'https://cn.bing.com/search?q='}
                     ]    
                 },
                 {
                     children:[
                         {id:0,title:'云盘精灵',path:'https://www.yunpanjingling.com/search/'},
                         {id:1,title:'大力盘',path:'https://www.dalipan.com/search?keyword='},
-                        {id:2,title:'如风搜',path:'http://www.rufengso.net/s/name/'},
-                        {id:3,title:'小可搜搜',path:'https://www.xiaokesoso.com/s/search?q='},
-                        {id:4,title:'小昭来了',path:'https://www.xiaozhaolaila.com/s/search?q='},
-                        {id:5,title:'史莱姆',path:'http://www.slimego.cn/search.html?q='}
-                    ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'胡萝卜周',path:'http://www.carrotchou.blog/?s='},
-                        {id:1,title:'ZD423',path:'https://www.zdfans.com/search.asp?keyword='},
-                        {id:2,title:'机锋论坛',path:'http://bbs.gfan.com/search?q='},
-                        {id:3,title:'果壳剥壳',path:'https://www.ghpym.com/?s='}
+                        {id:2,title:'小可搜搜',path:'https://www.xiaokesoso.com/s/search?q='},
+                        {id:3,title:'小昭来了',path:'https://www.xiaozhaolaila.com/s/search?q='},
+                        {id:4,title:'史莱姆',path:'http://www.slimego.cn/search.html?q='}
                     ]    
                 },
                 {
@@ -72,14 +60,7 @@ export default {
                         {id:2,title:'LoreFree',path:'https://ebook2.lorefree.com/site/index?s='},
                         {id:3,title:'SoBook',path:'https://sobooks.cc/search/'}
                     ]    
-                },
-                {
-                    children:[
-                        {id:0,title:'下厨房',path:'http://www.xiachufang.com/search/?keyword='},
-                        {id:1,title:'香哈菜谱',path:'https://www.xiangha.com/so/?q=caipu&s='}
-                    ]    
-                },
-                
+                }                
             ],
             searchIndex:0,//当前指向navTop的下标
             value:'百度',//搜索框中的提示信息
@@ -97,7 +78,7 @@ export default {
             var uls = document.querySelectorAll('#navBottom')
             var line = document.querySelector('.line')
             this.removeClass(lis,index)
-            line.style.marginLeft = -273 + 136 * index + 'px'
+            line.style.marginLeft = -135 + 136 * index + 'px'
             this.searchIndex = index
             this.value = uls[index].children[0].innerHTML
             this.navBottom.some( (item,i) => {
@@ -127,7 +108,7 @@ export default {
         removeClass(dom,i){
             dom.forEach( item => item.classList.remove('currentLi'))
             dom[i].className = 'currentLi'
-        },
+        }
     }
 }
 </script>
@@ -135,7 +116,7 @@ export default {
 <style lang="less" scoped>
 #search{
     height: 450px;
-    background-color: rgb(7,7,27);
+    animation: bgColor 10s infinite;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -145,19 +126,19 @@ export default {
         display: flex;
         li{
             margin-right: 40px;
-            color: #84848E;
+            color: #9ba4b6;
             font-size: 14px;
             cursor: pointer;
-            transition: color .4s;
-            &:hover{color: #fff;}
+            transition: color .2s;
+            &:hover{color: #FFF;}
             &:last-child{margin-right: 0;}
         }
     }
     .line{
         width: 32px;
         height: 4px;
-        transition: all .4s;
-        margin-left: -273px;
+        transition: all .2s;
+        margin-left: -135px;
         border-radius: 2px;
         background-color: #fff;
     }
@@ -171,8 +152,8 @@ export default {
             height: 50px;
             border: 0;
             border-radius: 25px;
-            background-color: #000;
-            color: #fff;
+            background-color: #FFF;
+            color: #2C2E2F;
             padding-left: 20px;
             margin: 0 auto;
             &:focus{outline: none;}
@@ -183,13 +164,22 @@ export default {
             top: 50%;
             right: 20px;
             transform: translateY(-50%);
-            background-color: #000;
+            background-color: #FFF;
             border: 0;
             cursor: pointer;
-            i{color: #fff;font-size: 20px;}
+            i{color: #2C2E2F;font-size: 20px;}
             &:focus{outline: none;}
         }
     } 
+}
+.currentLi{color: #FFF!important;}
+@keyframes bgColor {
+  0% { background-color:#3D348B; }
+  20% { background-color: #03256C; }
+  40% { background-color:#006494; }
+  60% { background-color: #2468F2; }
+  80% { background-color: #7678ED; }
+  100% { background-color:#3D348B; }
 }
 @media screen and (min-width: 760px) and (max-width: 960px) {
     .search input{

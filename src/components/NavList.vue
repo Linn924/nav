@@ -66,9 +66,11 @@
             @cancel="postDialogVisible = false" @confirm="postNavs">
             <div class="dialog-forms">
                 <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    placeholder="网站Logo" v-model="postNavsForm.logo">
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
                     placeholder="网站名称" v-model="postNavsForm.name">
                 <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
-                    v-model="postNavsForm.url">
+                    placeholder="网站网址" v-model="postNavsForm.url">
                 <textarea :class="flag?'bgColorMoon':'bgColorSunny'" placeholder="描述点什么吧！" 
                     v-model="postNavsForm.title"></textarea>
             </div>
@@ -78,6 +80,8 @@
             :mask="true" :flag="flag" :visible="putDialogVisible" 
             @cancel="cancelPutNavs" @confirm="putNavs">
             <div class="dialog-forms">
+                <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
+                    placeholder="网站Logo" v-model="putNavsForm.logo">
                 <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
                     placeholder="网站名称" v-model="putNavsForm.name">
                 <input :class="flag?'bgColorMoon':'bgColorSunny'" type="text" 
@@ -117,12 +121,14 @@ export default {
             postNavsForm:{//自定义导航添加表单
                 parentsId:Number,
                 brothersId:Number,
+                logo:'',
                 name:'',
                 title:'',
-                url:'https://'
+                url:''
             },
             putNavsForm:{//自定义导航修改表单
                 id:Number,
+                logo:'',
                 name:'',
                 title:'',
                 url:''
@@ -228,6 +234,7 @@ export default {
         },
         clickEditBtn(navs){
             this.putNavsForm.id = navs.id
+            this.putNavsForm.logo = navs.logo ? navs.logo : 'https://api.iowen.cn/favicon/'
             this.putNavsForm.name = navs.name
             this.putNavsForm.title = navs.title
             this.putNavsForm.url = navs.url
@@ -446,13 +453,14 @@ section{
         font-size: 15px;
         color: #AAA;
         font-family: Helvetica;
+        &:nth-child(4){margin-top: 10px;}
         &::-webkit-scrollbar {width: 3px;border-radius: 2px;}
         &::-webkit-scrollbar-thumb {background-color: rgb(177, 175, 175);border-radius: 4px;}
         &::-webkit-scrollbar-track{background-color: #bdbdbd;}
     }
 }
 
-.currentLi{color: #fff!important;}
+.currentLi{color: #FFF!important;}
 .indexLi{
     a{padding-left: 8px!important;}
     a img{

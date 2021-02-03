@@ -90,7 +90,7 @@ export default {
                 if(res.code != 200) return this.$message({message: `${res.tips}`,type: 'error',duration:1000,offset:80})
                 this.$message({message: `${res.tips}`,type: 'success',duration:1000,offset:80})
                 sessionStorage.setItem('token',res.token)
-                this.$router.push('/nav')
+                this.$router.push('/home')
             })
         },
         //账号登录
