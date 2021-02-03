@@ -1,8 +1,8 @@
-const Home = () => import(/* webpackChunkName: "nav_link_detail" */ '../components/Home.vue')
-const NavList = () => import(/* webpackChunkName: "nav_link_detail" */ '../components/NavList.vue')
-const NavDetail = () => import(/* webpackChunkName: "nav_link_detail" */ '../components/NavDetail.vue')
+const Home = () => import(/* webpackChunkName: "home" */ '../components/Home.vue')
+const NavList = () => import(/* webpackChunkName: "navlist" */ '../components/NavList.vue')
+const NavDetail = () => import(/* webpackChunkName: "navdetail" */ '../components/NavDetail.vue')
 
-const NotFound = () => import(/* webpackChunkName: "nav_link" */'../components/NotFound.vue')
+const NotFound = () => import(/* webpackChunkName: "notfound" */'../components/NotFound.vue')
 
 const Login = () => import(/* webpackChunkName: "login" */'../components/Login.vue')
 
@@ -23,7 +23,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  // mode: 'history',
+  mode: 'history',
   routes
 })
 

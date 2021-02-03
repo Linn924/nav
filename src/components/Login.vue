@@ -66,8 +66,8 @@ export default {
             accountForm:true,//显示账号登录
             faceForm:false,//隐藏人脸登录
             loginForm:{//登录表单
-                username:'LinnCooper',
-                password:'123456'
+                username:'',
+                password:''
             },
             loginRules:{//登录表单验证规则
                 username:[
