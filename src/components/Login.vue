@@ -6,20 +6,18 @@
             <div class="main-left">
                 <div class="login-form">
                     <div class="title">
-                        <span @click="accountLogon" :style="{color:accountForm?'#2468F2':'#000'}">账号登录</span>
-                        <span @click="faceLogon" :style="{color:faceForm?'#2468F2':'#000'}">人脸登录</span>
+                        <span>账号登录</span>
                     </div>
                     <div class="line"></div>
-                    <div :class="accountForm?'line-special-left':'line-special-right'"></div>
                     <!-- 登录方法 -->
                     <div class="login-method">
                         <!-- 账号登录 -->
-                        <div class="account-form" v-show="accountForm">
+                        <div class="account-form">
                             <div class="account-content">
                                 <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
                                     <el-form-item prop="username">
                                         <el-input v-model="loginForm.username" clearable prefix-icon="el-icon-user-solid"
-                                            placeholder="username" autofocus="true"></el-input>
+                                            placeholder="username"></el-input>
                                     </el-form-item>
                                     <el-form-item prop="password">
                                         <el-input v-model="loginForm.password" clearable prefix-icon="el-icon-lock"
@@ -36,12 +34,6 @@
                                 <router-link to="/home">游客浏览</router-link>
                             </div>
                             <p class="account-tips">温馨提示：<br/>只有登录才能使用一些有权限的功能哦!</p>
-                        </div>
-                        <!-- 人脸登录 -->
-                        <div class="face-form" v-show="faceForm">
-                            <div class="distinguish-box"></div>
-                            <button>开启摄像头</button>
-                            <p class="face-tips">温馨提示：<br/>只有打开摄像头才能登录哦!</p>
                         </div>
                     </div>
                 </div>
@@ -63,8 +55,6 @@
 export default {
     data(){
         return {
-            accountForm:true,//显示账号登录
-            faceForm:false,//隐藏人脸登录
             loginForm:{//登录表单
                 username:'',
                 password:''
@@ -85,25 +75,14 @@ export default {
         //登录
         async login(){
             this.$refs.loginFormRef.validate( async valid => {
-                if(!valid) return this.$message({message: '请输入用户名密码登录',type: 'error',duration:1000,offset:80})
+                if(!valid) return this.$message({message: '请输入用户名密码登录',type: 'error'})
                 const {data:res} = await this.$axios.get('users',{params:this.loginForm})
-                if(res.code != 200) return this.$message({message: `${res.tips}`,type: 'error',duration:1000,offset:80})
-                this.$message({message: `${res.tips}`,type: 'success',duration:1000,offset:80})
+                if(res.code != 200) return this.$message({message: `${res.tips}`,type: 'error'})
+                this.$message({message: `${res.tips}`,type: 'success'})
                 sessionStorage.setItem('token',res.token)
                 this.$router.push('/home')
             })
-        },
-        //账号登录
-        accountLogon(){
-            this.faceForm = false
-            this.accountForm = true
-        },
-        //人脸登录
-        faceLogon(){
-            this.faceForm = true
-            this.accountForm = false
-            this.$refs.loginFormRef.resetFields()
-        },
+        }
     }
 }
 </script>
@@ -213,45 +192,5 @@ footer{
             color: #AAAAAA;
         }
     }
-    .face-form{
-        .distinguish-box{
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 1px solid #ECECEC;
-            margin: 20px auto;
-            margin-bottom: 20px;
-        }
-        button{
-            width: 320px;
-            padding: 12px 0;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            background-color: #2468F2;
-            color: #fff;
-            cursor: pointer;
-        }
-        .face-tips{
-            margin-top: 20px;
-            font-size: 12px;
-            line-height: 2;
-            color: #AAAAAA;
-        }
-    }
-}
-.line-special-left{
-    position: absolute;
-    top: 64px;
-    left: 0;
-    width: 160px;
-    border: 1px solid #2468F2;
-}
-.line-special-right{
-    position: absolute;
-    top: 64px;
-    left: 160px;
-    width: 160px;
-    border: 1px solid #2468F2;
 }
 </style>

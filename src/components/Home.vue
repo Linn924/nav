@@ -70,12 +70,6 @@
                     <img src="../assets/logo.jpg">
                     <i class="fa fa-bars" @click="isFold = false" v-show="isFold"></i>
                     <i class="el-icon-s-data" @click="isFold = true" v-show="!isFold"></i>
-                    <!-- <nav><li v-for="(item,id) in routerList" :key="id">
-                            <router-link :to="item.router">
-                                <span>{{item.name}}</span>
-                            </router-link>
-                        </li>
-                    </nav> -->
                 </div>
                 <div class="phone">
                     <img src="../assets/logo.jpg">
@@ -220,10 +214,6 @@ export default {
                     ]
                 },
             ],
-            routerList:[//路由导航
-                {router:'/home',className:'#icon-home',name:'主页'},
-                {router:'/home',className:'#icon-link',name:'友情链接'},
-            ],
             isFold: true,//切换模式 折叠or打开
             flag:false,//切换模式 日间or夜间
             drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
@@ -268,6 +258,7 @@ export default {
         //管理员登出
         logout(){
             sessionStorage.clear()
+            this.$message({message: '登出成功',type: 'success'})
             this.reload()
         }
     }

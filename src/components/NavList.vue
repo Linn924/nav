@@ -169,7 +169,7 @@ export default {
         async getNavs(){
             const {data:res} = await this.$axios.get('navs')
             if(res.code != 200) 
-            return this.$message({message:'获取数据失败',type:'error',duration:1000})
+            return this.$message({message:'获取数据失败',type:'error'})
             this.navList = res.data
             this.dealNavs(this.navList.length)
         },
@@ -235,8 +235,8 @@ export default {
         //添加自定义网站
         async postNavs(){
             const {data:res} = await this.$axios.post('navs',this.postNavsForm)
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
-            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
+            this.$message({message:`${res.tips}`,type:'success'})
             this.postDialogVisible = false
             this.reload()
         },
@@ -256,8 +256,8 @@ export default {
         //修改自定义网站
         async putNavs(){
             const {data:res} = await this.$axios.put('navs',this.putNavsForm)
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
-            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
+            this.$message({message:`${res.tips}`,type:'success'})
             this.putDialogVisible = false
             this.reload()
         },
@@ -273,8 +273,8 @@ export default {
         //删除自定义网站
         async deleteNavs(){
             const {data:res} = await this.$axios.delete('navs',{params:{id:this.deleteLiIndex}})
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error',duration:1000})
-            this.$message({message:`${res.tips}`,type:'success',duration:1000})
+            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
+            this.$message({message:`${res.tips}`,type:'success'})
             this.deleteDialogVisible = false
             this.reload()
         },
@@ -567,7 +567,8 @@ section{
     }
     section .item>nav li.indexLi{
         margin: 0 30px 30px 0;
-        width: 400px!important;
+        height: 85px;
+        width: 410px;
     }
 }
 @media screen and (min-width: 1681px) and (max-width: 1920px) {

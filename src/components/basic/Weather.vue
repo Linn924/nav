@@ -35,7 +35,7 @@ export default {
         return {
             weatherList:[],//最近三天天气数据
             now:{//当天天气信息
-                city:'',//当前城市
+                city:'徐州市',//当前城市
                 wendu:'',//当天平均温度
                 type:'',//当天天气状态
             },
