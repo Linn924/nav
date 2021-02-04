@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import Weather from './basic/Weather'
+import Weather from './function/Weather'
 export default {
     inject:['reload'],
     components:{
@@ -247,7 +247,7 @@ export default {
                 var ul = document.querySelectorAll('.item>div nav')[fId]
                 window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
                 this.$refs.Link.clickNavs(fId,sId)
-            }else if(url.includes('navdetail')){
+            }else if(url.includes('/home/nav')){
                 this.$router.push('/home/navlist')
             }
         },

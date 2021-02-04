@@ -101,7 +101,7 @@
 
 <script>
 import Dialog from './basic/Dialog'
-import Search from './basic/Search'
+import Search from './function/Search'
 import Footer from './basic/Footer'
 export default {
     inject:['reload'],

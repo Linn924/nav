@@ -1,10 +1,10 @@
 const Home = () => import(/* webpackChunkName: "home" */ '../components/Home.vue')
 const NavList = () => import(/* webpackChunkName: "navlist" */ '../components/NavList.vue')
-const NavDetail = () => import(/* webpackChunkName: "navdetail" */ '../components/NavDetail.vue')
+const Nav = () => import(/* webpackChunkName: "nav" */ '../components/Nav.vue')
 
-const NotFound = () => import(/* webpackChunkName: "notfound" */'../components/NotFound.vue')
+const NotFound = () => import(/* webpackChunkName: "notfound" */'../components/basic/NotFound.vue')
 
-const Login = () => import(/* webpackChunkName: "login" */'../components/Login.vue')
+const Login = () => import(/* webpackChunkName: "login" */'../components/function/Login.vue')
 
 Vue.use(VueRouter)
 
@@ -17,7 +17,7 @@ const routes = [
     component:Home,
     children:[
       { path:'/home/navlist',component:NavList},
-      { path:'/home/navdetail',component:NavDetail},
+      { path:'/home/nav',component:Nav},
     ]
   }
 ]

@@ -28,8 +28,7 @@ export default {
         return {
             visible:false,
             routerList:[
-                {name:'首页',router:'/home',className:'el-icon-s-home'},
-                {name:'关于',router:'/home',className:'el-icon-user-solid'},
+                {name:'首页',router:'/home',className:'el-icon-s-home'}
             ]
         }
     }
