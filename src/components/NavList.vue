@@ -19,7 +19,6 @@
                             {{son.name}}
                         </li>
                     </nav>
-                    <!-- <span>more+</span> -->
                 </div>
 
                 <nav v-for="(son,sId) in father.two" :key="sId" v-show="sId  === clickIndex[fId].cIndex">
