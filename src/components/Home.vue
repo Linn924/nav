@@ -106,7 +106,7 @@ export default {
     },
     data(){
         return {
-            asideTop:[//左侧导航数据1
+            asideTop:[
                 {
                     id:0,
                     className:'el-icon-location',
