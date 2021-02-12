@@ -13,11 +13,11 @@ const routes = [
   { path: '/',redirect: '/home'},
   { path: '/login',component:Login},
   { path: '/home',
-    redirect: '/home/navlist',
+    redirect: '/navlist',
     component:Home,
     children:[
-      { path:'/home/navlist',component:NavList},
-      { path:'/home/nav',component:Nav},
+      { path:'/navlist',component:NavList},
+      { path:'/nav',component:Nav},
     ]
   }
 ]

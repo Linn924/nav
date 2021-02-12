@@ -15,6 +15,7 @@
 
 <script>
 export default {
+    name:'Dialog',
     props:{
         title:{
             type:String,

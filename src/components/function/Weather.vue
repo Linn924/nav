@@ -30,7 +30,13 @@
 
 <script>
 export default {
-    props:['flag'],
+    name:'Weather',
+    props:{
+        flag:{
+            type:Boolean,
+            required:true
+        }
+    },
     data(){
         return {
             weatherList:[],//最近三天天气数据
@@ -54,9 +60,9 @@ export default {
         },
         //根据城市获取天气信息
         async getWeather(location){
-            const {data:res} = await this.$axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
+            const {data:res} = await this.axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${location}`)
             if(res.status !== 1000) 
-            return this.$message.error('获取天气数据失败')
+            return this.$message({message:'获取天气数据失败',type:'error',duration:1200})
             const value = res.data.forecast.slice(0,3)
             this.dealWeather(value)
         },

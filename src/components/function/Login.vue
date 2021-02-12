@@ -6,7 +6,7 @@
             <div class="main-left">
                 <div class="login-form">
                     <div class="title">
-                        <span>账号登录</span>
+                        <span>管理员登录</span>
                     </div>
                     <div class="line"></div>
                     <!-- 登录方法 -->
@@ -40,12 +40,12 @@
             </div>
             <!-- 右侧修饰部分 -->
             <div class="main-right">
+                <img src="../../assets/image/minions.jpg" alt="">
             </div>
         </main> 
         <footer>
             <section>
-                <span>© 2020 - 2021 LinnCode 版权所有</span>
-                <span> 苏ICP备20023864号</span>
+                <span>© 2021 LinnCooper</span>
             </section>  
         </footer>
     </div>
@@ -53,6 +53,7 @@
 
 <script>
 export default {
+    name:'Login',
     data(){
         return {
             loginForm:{//登录表单
@@ -72,13 +73,13 @@ export default {
         }
     },
     methods:{
-        //登录
         async login(){
             this.$refs.loginFormRef.validate( async valid => {
-                if(!valid) return this.$message({message: '请输入用户名密码登录',type: 'error'})
-                const {data:res} = await this.$axios.get('users',{params:this.loginForm})
-                if(res.code != 200) return this.$message({message: `${res.tips}`,type: 'error'})
-                this.$message({message: `${res.tips}`,type: 'success'})
+                if(!valid) return 
+                const {data:res} = await this.axios.get('users',{params:this.loginForm})
+                if(res.code != 200) 
+                return this.$message({message: `${res.tips}`,type: 'error',duration:1200})
+                this.$message({message: `${res.tips}`,type: 'success',duration:1200})
                 sessionStorage.setItem('token',res.token)
                 this.$router.push('/home')
             })
@@ -107,7 +108,6 @@ export default {
         width: 1200px;
         border-radius: 5px;
         margin: 0 auto;
-        background:url(https://s3.ax1x.com/2021/02/02/ynl0PJ.jpg) no-repeat right center;
     }
     footer{
         flex: 1;
@@ -142,6 +142,13 @@ main{
             }
         }
         
+    }
+    .main-right{
+        flex: 1;
+        img{
+            width: 100%;
+            height: inherit;
+        }
     }
 }
 footer{

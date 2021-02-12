@@ -5,7 +5,7 @@
 
         <aside :class="flag?'asideMoon':'asideSunny'">
             <div class="logo">
-                <img src="../assets/logo.jpg">
+                <img src="../assets/image/logo.jpg">
                 <transition name="logo"><span v-show="!isFold">简约导航</span></transition>
             </div>
 
@@ -37,43 +37,41 @@
             </el-menu>
         </aside>
 
-        <transition name="mask"><div class="mask" v-show="drawer" @click="drawer = !drawer"></div></transition>
+        <transition name="mask"><div class="mask" v-show="drawer" @click="close"></div></transition>
 
-        <transition name="drawer">
-            <div class="drawer" v-show="drawer" :class="flag?'asideMoon':'asideSunny'">
-                <div class="logo">
-                    <img src="../assets/logo.jpg">
-                    <transition name="logo"><span>简约导航</span></transition>
-                </div>
-
-                <el-menu :class="flag?'one asideMoon scrollbarMoon':'one asideSunny scrollbarSunny'"
-                    :unique-opened="true">
-                    <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
-                        <template slot="title">
-                            <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
-                            <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
-                        </template>
-                        <el-menu-item-group :class="flag?'asideMoon':'asideSunny'">
-                            <span slot="title">{{father.title}}</span>
-                            <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
-                                @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
-                            </el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
+        <div class="drawer" :class="{asideMoon:flag,asideSunny:!flag,opened:isOpened,closed:isClosed}">
+            <div class="logo">
+                <img src="../assets/image/logo.jpg">
+                <transition name="logo"><span>简约导航</span></transition>
             </div>
-        </transition>
+
+            <el-menu :class="flag?'one asideMoon scrollbarMoon':'one asideSunny scrollbarSunny'"
+                :unique-opened="true">
+                <el-submenu v-for="(father,fId) in asideTop" :key="fId" :index="fId">
+                    <template slot="title">
+                        <i :class="father.className" :style="{'margin':fId == 5 || fId == 6 ? '0 10px 0 5px': ''}"></i>
+                        <span slot="title" :style="{'color':flag?'#fff':'#000'}">{{father.title}}</span>
+                    </template>
+                    <el-menu-item-group :class="flag?'asideMoon':'asideSunny'">
+                        <span slot="title">{{father.title}}</span>
+                        <el-menu-item v-for="(son,sId) in father.children" :key="sId" :index="`${fId}-${sId}`" 
+                            @click="location(fId,sId)" :style="{'color':flag?'#fff':'#000'}">{{son.title}}
+                        </el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+            </el-menu>
+        </div>
 
         <section :style="{'padding-left':isFold ?'64px':'200px'}">
             <header :class="flag?'hairyglassMoon':'hairyglassSunny'">
                 <div class="computer">
-                    <img src="../assets/logo.jpg">
+                    <img src="../assets/image/logo.jpg">
                     <i class="fa fa-bars" @click="isFold = false" v-show="isFold"></i>
                     <i class="el-icon-s-data" @click="isFold = true" v-show="!isFold"></i>
                 </div>
                 <div class="phone">
-                    <img src="../assets/logo.jpg">
-                    <i class="fa fa-bars" @click="drawer = !drawer"></i>
+                    <img src="../assets/image/logo.jpg">
+                    <i class="fa fa-bars" @click="open"></i>
                 </div>
             </header>
 
@@ -101,6 +99,7 @@
 import Weather from './function/Weather'
 export default {
     inject:['reload'],
+    name:'Home',
     components:{
         Weather
     },
@@ -216,12 +215,13 @@ export default {
             ],
             isFold: true,//切换模式 折叠or打开
             flag:false,//切换模式 日间or夜间
-            drawer:false,//移动端状态下切换下拉框模式 下拉or隐藏
+            isOpened:false,//opened动画 加载or不加载
+            isClosed:false,//close动画 加载or不加载
+            drawer:false,//移动端状态下抽屉 显示or隐藏
             imageList:[//预加载图片数据
                 'https://s3.ax1x.com/2021/01/31/yEVgQs.png',
                 'https://s3.ax1x.com/2021/01/31/yEVTW4.jpg',
-                'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg',
-                'https://s3.ax1x.com/2021/02/02/ynl0PJ.jpg'
+                'https://s3.ax1x.com/2021/01/31/yEV6zj.jpg'
             ],
             token:false,//判断管理员的登录状态 登录or未登录
         }
@@ -247,8 +247,8 @@ export default {
                 var ul = document.querySelectorAll('.item>div nav')[fId]
                 window.scroll({top: ul.offsetTop - 135,behavior: 'smooth'})
                 this.$refs.Link.clickNavs(fId,sId)
-            }else if(url.includes('/home/nav')){
-                this.$router.push('/home/navlist')
+            }else if(url.includes('/nav')){
+                this.$router.push('/navlist')
             }
         },
         //跳转到登录界面
@@ -258,14 +258,27 @@ export default {
         //管理员登出
         logout(){
             sessionStorage.clear()
-            this.$message({message: '登出成功',type: 'success'})
+            this.$message({message: '登出成功',type: 'success',duration:1200})
             this.reload()
+        },
+        //抽屉展开
+        open(){
+            this.isOpened = true
+            this.isClosed = false
+            this.drawer = true
+        },
+        //抽屉关闭
+        close(){
+            this.isOpened = false
+            this.isClosed = true
+            this.drawer = false
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
+@time:.3s;
 #nav{
     display: flex;
     position: relative;
@@ -301,7 +314,7 @@ export default {
     .drawer{
         z-index: 999;
         top: 0;
-        left: 0;
+        left: -200px;
         height: 100vh; 
         background-color: #f9f9f9;
         position: fixed;
@@ -469,20 +482,30 @@ export default {
     &::-webkit-scrollbar-thumb {background-color: #2C2E2F;border-radius: 4px;}
     &::-webkit-scrollbar-track{background-color: #1B1D1F;}
 }
+.opened{
+    animation: opened @time ease forwards;
+}
+.closed{
+    animation: closed @time ease forwards;
+}
+@keyframes opened {
+    from{left: -200px;}
+    to{left: 0;}
+}
+@keyframes closed {
+    from{left: 0;}
+    to{left: -200px;}
+}
 
 .logo-enter,
 .logo-leave-to{opacity: 0;}
 .logo-enter-active{transition: all 1s;}
 .logo-leave-active{transition: all 0.2s;}
 
-.drawer-enter,
-.drawer-leave-to,
 .mask-enter,
 .mask-leave-to{opacity: 0;}
-.drawer-enter-active,
-.drawer-leave-active,
 .mask-enter-active
-.mask-leave-active{transition: all 1s;} 
+.mask-leave-active{transition: all @time;} 
 
 @media screen and (max-width: 960px) {
     #nav>aside,#nav>section>header .computer{

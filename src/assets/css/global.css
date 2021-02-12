@@ -4,17 +4,12 @@
 }
 html,
 body,
-#app{
-    height:100vh;
-}
+#app
+{height:100vh;}
 
-a{
-    text-decoration: none;
-}
+a{text-decoration: none;}
 
-.el-menu--popup{
-    padding:0!important;
-}
+.el-menu--popup{padding:0!important;}
 .asideMoon div.el-submenu__title:hover{
     background-color: #2C2E2F!important;
 }
@@ -22,7 +17,6 @@ a{
     background-color: #FFF!important;
 }
 
-/* 浏览器滚动条样式 */
 html{overflow-x: hidden;}
 html::-webkit-scrollbar {width: 6px;border-radius: 4px;}
 html::-webkit-scrollbar-thumb {background-color: rgb(177, 175, 175);border-radius: 4px;}

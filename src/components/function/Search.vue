@@ -27,6 +27,7 @@
 
 <script>
 export default {
+    name:'Search',
     data(){
         return {
             navTop:[

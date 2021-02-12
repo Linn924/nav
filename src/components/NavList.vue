@@ -104,7 +104,17 @@ import Search from './function/Search'
 import Footer from './basic/Footer'
 export default {
     inject:['reload'],
-    props:['flag','token'],
+    name:'NavList',
+    props:{
+        flag:{
+            type:Boolean,
+            required:true
+        },
+        token:{
+            type:Boolean,
+            required:true
+        }
+    },
     components:{
         Dialog,
         Search,
@@ -137,7 +147,7 @@ export default {
             deleteDialogVisible:false,//删除自定义网站对话框 显示or隐藏
             clickLiIndex:0,//右键点击的导航网站
             deleteLiIndex:0,//即将删除的导航网站下标
-            loging:require('../assets/loging.gif'),//默认图标
+            loging:require('../assets/image/loging.gif'),//默认图标
             timer:null,//滚动事件定时器
             initFlag:false,//页面加载时调用滚动和图片加载事件 执行了or未执行
         }
@@ -166,9 +176,9 @@ export default {
     methods: {
         //获取导航数据
         async getNavs(){
-            const {data:res} = await this.$axios.get('navs')
+            const {data:res} = await this.axios.get('navs')
             if(res.code != 200) 
-            return this.$message({message:'获取数据失败',type:'error'})
+            return this.$message({message:'获取数据失败',type:'error',duration:1200})
             this.navList = res.data
             this.dealNavs(this.navList.length)
         },
@@ -233,9 +243,10 @@ export default {
         },
         //添加自定义网站
         async postNavs(){
-            const {data:res} = await this.$axios.post('navs',this.postNavsForm)
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
-            this.$message({message:`${res.tips}`,type:'success'})
+            const {data:res} = await this.axios.post('navs',this.postNavsForm)
+            if(res.code != 200) 
+            return this.$message({message:`${res.tips}`,type:'error',duration:1200})
+            this.$message({message:`${res.tips}`,type:'success',duration:1200})
             this.postDialogVisible = false
             this.reload()
         },
@@ -254,9 +265,10 @@ export default {
         },
         //修改自定义网站
         async putNavs(){
-            const {data:res} = await this.$axios.put('navs',this.putNavsForm)
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
-            this.$message({message:`${res.tips}`,type:'success'})
+            const {data:res} = await this.axios.put('navs',this.putNavsForm)
+            if(res.code != 200) 
+            return this.$message({message:`${res.tips}`,type:'error',duration:1200})
+            this.$message({message:`${res.tips}`,type:'success',duration:1200})
             this.putDialogVisible = false
             this.reload()
         },
@@ -271,9 +283,10 @@ export default {
         },
         //删除自定义网站
         async deleteNavs(){
-            const {data:res} = await this.$axios.delete('navs',{params:{id:this.deleteLiIndex}})
-            if(res.code != 200) return this.$message({message:`${res.tips}`,type:'error'})
-            this.$message({message:`${res.tips}`,type:'success'})
+            const {data:res} = await this.axios.delete('navs',{params:{id:this.deleteLiIndex}})
+            if(res.code != 200) 
+            return this.$message({message:`${res.tips}`,type:'error',duration:1200})
+            this.$message({message:`${res.tips}`,type:'success',duration:1200})
             this.deleteDialogVisible = false
             this.reload()
         },

@@ -1,12 +1,12 @@
 <template>
     <footer :style="colorStyle">
-        <p>© 2020 - 2021 LinnCooper 版权所有</p>
-        <p>苏ICP备20023864号</p>
+        <p>© 2021 LinnCooper</p>
     </footer>
 </template>
 
 <script>
 export default {
+    name:'Footer',
     props:{
         flag:{
             type:Boolean,

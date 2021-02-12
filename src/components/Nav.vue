@@ -9,7 +9,17 @@
 
 <script>
 export default {
-    props:['token','flag'],
+    name:'Nav',
+    props:{
+        flag:{
+            type:Boolean,
+            required:true
+        },
+        token:{
+            type:Boolean,
+            required:true
+        }
+    },
     data(){
         return {
             id:Number

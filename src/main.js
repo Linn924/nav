@@ -11,7 +11,7 @@ axios.defaults.baseURL='http://139.196.210.43:0925/'
 
 axios.interceptors.request.use(config => {
   config.url === 'navs' && NProgress.start()
-  config.headers.Authorization = window.sessionStorage.getItem('token')
+  config.headers.Authorization = sessionStorage.getItem('token')
   return config
 })
 
@@ -21,7 +21,7 @@ axios.interceptors.response.use(config => {
 })
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = axios
+Vue.prototype.axios = axios
 Vue.use(VueJsonp)
 
 Vue.filter('date', function (originVal) {
