@@ -1,5 +1,5 @@
 <template>
-    <div id="nav">
+    <div id="home">
 
         <el-backtop><i :class="flag?'el-icon-caret-top iconMoon':'el-icon-caret-top iconSunny'"></i></el-backtop>
 
@@ -279,7 +279,7 @@ export default {
 
 <style lang="less" scoped>
 @time:.3s;
-#nav{
+#home{
     display: flex;
     position: relative;
     aside{
@@ -330,7 +330,7 @@ export default {
     }
 }
 
-#nav>aside,.drawer{
+#home>aside,.drawer{
     .logo{
         margin: 10px auto;
         display: flex;
@@ -352,7 +352,7 @@ export default {
     .el-menu-item{&:hover{color: #2468F2!important;}}
 }
 
-#nav>section{
+#home>section{
     header{
         width: 100%;
         height: 7.5vh;
@@ -507,20 +507,20 @@ export default {
 .mask-leave-active{transition: all @time;} 
 
 @media screen and (max-width: 960px) {
-    #nav>aside,#nav>section>header .computer{
+    #home>aside,#home>section>header .computer{
         display: none!important;
     }
-    #nav>section>header .computer>img{
+    #home>section>header .computer>img{
         display: block;
         margin-right: 20px;
     }
-    #nav>section{
+    #home>section{
         padding-left: 0!important;
     }
-    #nav>.el-backtop{
+    #home>.el-backtop{
         bottom: 60px!important;
     }
-    #nav .weatherBox{
+    #home .weatherBox{
         height: 40px;
         bottom: 10px;
     }

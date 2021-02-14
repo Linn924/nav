@@ -1,5 +1,5 @@
 <template>
-    <div id="link" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
+    <div id="navlist" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
         <Search></Search>
 
         <section>
@@ -328,7 +328,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#link{
+#navlist{
     width: 100%;
     min-height: 100vh;
     min-width: 375px;

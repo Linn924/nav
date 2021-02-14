@@ -1,6 +1,6 @@
 <template>
     <transition name="dialog">
-        <div class="dialog" :style="maskStyle" v-if="isVisible">
+        <div id="dialog" :style="maskStyle" v-if="isVisible">
             <div class="dialog-container" :style="containerStyle">
                 <span class="dialog-title" :style="titleStyle" v-if="title">{{title}}</span>
                 <slot></slot>
@@ -106,7 +106,7 @@ export default {
     box-sizing: border-box;
 }
 
-.dialog{
+#dialog{
     position: fixed;
     top: 0;
     left: 0;
@@ -149,10 +149,10 @@ export default {
     }
 }
 
-.dialog-enter-active,
-.dialog-leave-active
+#dialog-enter-active,
+#dialog-leave-active
 {transition: all .25s;}
-.dialog-enter,
-.dialog-leave-to
+#dialog-enter,
+#dialog-leave-to
 {opacity: 0;}
 </style>

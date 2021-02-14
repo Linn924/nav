@@ -3,7 +3,7 @@
         <i :class="className" @mouseenter="showWeather = true" 
             @mouseleave="showWeather = false"></i>
 
-        <div v-show="showWeather" @mouseenter="showWeather = true" 
+        <div v-if="showWeather" @mouseenter="showWeather = true" 
             @mouseleave="showWeather = false" :style="{'backgroundImage':`url(${backgroundImage})`}">
 
             <header><label>{{now.city}}</label><span>简约天气</span></header>

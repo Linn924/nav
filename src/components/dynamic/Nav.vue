@@ -1,5 +1,5 @@
 <template>
-    <div id="detail" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
+    <div id="nav" :style="{'backgroundColor':flag?'#1B1D1F':'#F1F5F8'}">
         <!-- 当前ID：{{id}} <br>
         当前模式：{{flag}} <br>
         登录状态：{{token}} -->
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#detail{
+#nav{
     padding-top: 8vh;
     min-height: 100vh;
     box-sizing: border-box;
