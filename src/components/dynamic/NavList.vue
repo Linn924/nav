@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import Dialog from './basic/Dialog'
-import Search from './function/Search'
-import Footer from './basic/Footer'
+import Dialog from '../static/Dialog'
+import Search from '../static/Search'
+import Footer from '../static/Footer'
 export default {
     inject:['reload'],
     name:'NavList',
@@ -147,7 +147,7 @@ export default {
             deleteDialogVisible:false,//删除自定义网站对话框 显示or隐藏
             clickLiIndex:0,//右键点击的导航网站
             deleteLiIndex:0,//即将删除的导航网站下标
-            loging:require('../assets/image/loging.gif'),//默认图标
+            loging:require('../../assets/image/loging.gif'),//默认图标
             timer:null,//滚动事件定时器
             initFlag:false,//页面加载时调用滚动和图片加载事件 执行了or未执行
         }

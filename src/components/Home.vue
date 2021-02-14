@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import Weather from './function/Weather'
+import Weather from './static/Weather'
 export default {
     inject:['reload'],
     name:'Home',
@@ -326,7 +326,6 @@ export default {
         width: 100vw;
         position: fixed;
         background-color: rgba(0,0,0, .5);
-        border: 1px solid #fff;
         z-index: 998;
     }
 }
@@ -473,13 +472,13 @@ export default {
     &:hover{color: #fff!important;}
 }
 .scrollbarSunny{
-    &::-webkit-scrollbar {width: 6px;border-radius: 4px;}
-    &::-webkit-scrollbar-thumb {background-color: #fff;border-radius: 4px;}
+    &::-webkit-scrollbar {width: 5px;border-radius: 2px;}
+    &::-webkit-scrollbar-thumb {background-color: #fff;border-radius: 2px;}
     &::-webkit-scrollbar-track{background-color: #F1F5F8;}
 }
 .scrollbarMoon{
-    &::-webkit-scrollbar {width: 6px;border-radius: 4px;}
-    &::-webkit-scrollbar-thumb {background-color: #2C2E2F;border-radius: 4px;}
+    &::-webkit-scrollbar {width: 5px;border-radius: 2px;}
+    &::-webkit-scrollbar-thumb {background-color: #2C2E2F;border-radius: 2px;}
     &::-webkit-scrollbar-track{background-color: #1B1D1F;}
 }
 .opened{

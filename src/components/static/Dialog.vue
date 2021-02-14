@@ -1,6 +1,6 @@
 <template>
     <transition name="dialog">
-        <div class="dialog" :style="maskStyle" v-show="isVisible">
+        <div class="dialog" :style="maskStyle" v-if="isVisible">
             <div class="dialog-container" :style="containerStyle">
                 <span class="dialog-title" :style="titleStyle" v-if="title">{{title}}</span>
                 <slot></slot>

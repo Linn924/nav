@@ -1,10 +1,9 @@
 const Home = () => import(/* webpackChunkName: "home" */ '../components/Home.vue')
-const NavList = () => import(/* webpackChunkName: "navlist" */ '../components/NavList.vue')
-const Nav = () => import(/* webpackChunkName: "nav" */ '../components/Nav.vue')
 
-const NotFound = () => import(/* webpackChunkName: "notfound" */'../components/basic/NotFound.vue')
-
-const Login = () => import(/* webpackChunkName: "login" */'../components/function/Login.vue')
+const NavList = () => import(/* webpackChunkName: "navlist" */ '../components/dynamic/NavList.vue')
+const Nav = () => import(/* webpackChunkName: "nav" */ '../components/dynamic/Nav.vue')
+const Login = () => import(/* webpackChunkName: "login" */'../components/dynamic/Login.vue')
+const NotFound = () => import(/* webpackChunkName: "notfound" */'../components/dynamic/NotFound.vue')
 
 Vue.use(VueRouter)
 
